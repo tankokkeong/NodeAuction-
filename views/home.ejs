@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <%- include("./common/plugins.ejs") %>
+
+    <link rel="stylesheet" href="style/home.css">
+
+
+</head>
+<body>
+    <%- include("./common/header.ejs") %>
+
+    <div class="body-content">
+        <div class="home-banner text-center">
+            <div class="banner-text">
+                <h2 class="text-light">Best Place to Sell & Buy</h2>
+
+                <div class="banner-search mt-3">
+                    <form action="auctionResults.html" method="GET" style="width:100%;" class="banner-form">
+                        <span class="banner-search-icon"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control banner-search-input banner-search-element" placeholder="Search for anything" name="item" onkeyup="dashboardSearch()" id="dashboard-search-input">
+                        <button class="btn btn-primary banner-search-element">Search</button>
+                    </form>
+                </div>
+
+                <div class="app-search-results border-secondary text-center" id="dashboard-search-results-container" style="display:none;">
+                    <div class="search-results-list text-left">
+                        <a class="app-search-item list-group-item list-group-item-action" href="#"><i class="fa fa-search mr-1"></i> Product 1</a>
+                        <a class="app-search-item list-group-item list-group-item-action" href="#"><i class="fa fa-search mr-1"></i> Product 2</a>
+                        <a class="app-search-item list-group-item list-group-item-action" href="#"><i class="fa fa-search mr-1"></i> Product 3</a>
+                        <a class="app-search-item list-group-item list-group-item-action" href="#"><i class="fa fa-search mr-1"></i> Product 4</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="deals-section" style="z-index: -1;">
+            <div class="section-header text-center">
+                <h3>How it works</h3>
+            </div>
+
+            <div class="row step-row mt-3">
+                <div class="col-sm-6 col-lg-3 step-col mt-3">
+                    <div class="step-icon-container text-center">
+                        <i class="fas fa-user-plus step-icon"></i>
+                    </div>
+
+                    <div class="step-indicator text-center mt-3">
+                        Step 1: Register an account
+                    </div>
+
+                    <div class="step-description text-justify mt-3">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                        Numquam veritatis ex libero enim odio error excepturi exercitationem 
+                        suscipit vitae expedita tempora ab, 
+                        quisquam fuga iure labore eos doloremque quae alias.
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 step-col mt-3">
+                    <div class="step-icon-container text-center">
+                        <i class="fas fa-cart-arrow-down step-icon"></i>
+                    </div>
+
+                    <div class="step-indicator text-center mt-3">
+                        Step 2: Create or submit a bid
+                    </div>
+
+                    <div class="step-description text-justify mt-3">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                        Numquam veritatis ex libero enim odio error excepturi exercitationem 
+                        suscipit vitae expedita tempora ab, 
+                        quisquam fuga iure labore eos doloremque quae alias.
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 step-col mt-3">
+                    <div class="step-icon-container text-center">
+                        <i class="fas fa-hand-paper step-icon"></i>
+                    </div>
+
+                    <div class="step-indicator text-center mt-3">
+                        Step 3: Start the bidding
+                    </div>
+
+                    <div class="step-description text-justify mt-3">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                        Numquam veritatis ex libero enim odio error excepturi exercitationem 
+                        suscipit vitae expedita tempora ab, 
+                        quisquam fuga iure labore eos doloremque quae alias.
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 step-col mt-3">
+                    <div class="step-icon-container text-center">
+                        <i class="fas fa-bell step-icon"></i>
+                    </div>
+
+                    <div class="step-indicator text-center mt-3">
+                        Step 4: Received Bidding Results
+                    </div>
+
+                    <div class="step-description text-justify mt-3">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                        Numquam veritatis ex libero enim odio error excepturi exercitationem 
+                        suscipit vitae expedita tempora ab, 
+                        quisquam fuga iure labore eos doloremque quae alias.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ending-soon deals-section">
+            <div class="section-header">
+                <h3>Ending Soon</h3>
+            </div>
+
+            <div class="row product-row mt-3">
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="today-deals deals-section">
+            <div class="section-header">
+                <h3>Today's Deals</h3>
+            </div>
+
+            <div class="row product-row mt-3">
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 product-col">
+                    <a href="product-info" class="product-link">
+                        <div class="product-img-container">
+                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                        </div>
+    
+                        <div class="product-details text-center">
+                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
+                            <span class="product-price">$329.99</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <%- include("./common/footer.ejs") %>
+</body>
+</html>
+
+<script>
+    //Check Sign In
+    checkSignIn();
+
+    
+</script>

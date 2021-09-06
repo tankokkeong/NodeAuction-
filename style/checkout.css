@@ -1,0 +1,56 @@
+.checkout-container{
+    padding: 20px;
+}
+
+.pay-with-card-trigger{
+    padding: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.pay-with-card-form, .pay-with-online-form{
+    padding: 20px;
+    display: none;
+    background-color: rgb(243, 243, 243);
+    border: 1px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.cart-media{
+    border: 1px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 5px;
+}
+
+.total-display{
+    border: 1px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 15px;
+}
+
+.bg-paypal{
+    background-color: #00457C!important;
+}
+
+.cart-title h2, .checkout-title h1{
+    font-size: 35px;
+}
+
+.payment-icon{
+    width: 50px;
+}
+
+#paypal-icon{
+    width: 75px;
+}
+
+.pay-with-online-form .form-check-input{
+    position: relative;
+}
+
+.error-checkout{
+    margin-left: 5px;
+    position: relative;
+    top: 5px;
+}

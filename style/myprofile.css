@@ -1,0 +1,76 @@
+.profile-container{
+    padding: 20px;
+}
+
+#list-tab .active{
+    background-color: black;
+    border: 1px solid black;
+}
+
+.payment-row{
+    border: 1px solid black;
+    display: flex;
+    width: 100%;
+}
+
+.payment-col{
+    margin: 0 10px;
+}
+
+.payment-card-num{
+    position: relative;
+    width: 100%;
+    top: 15px;
+}
+
+.payment-delete-btn{
+    position: relative;
+    top: 5px;
+    justify-content: flex-end;
+}
+
+.myprofile-col-1{
+    width: 100%;
+    padding-bottom: 20px;
+    overflow-x: auto!important;
+}
+
+.auction-col{
+    display: flex;
+}
+
+.question-mark{
+    font-size: 25px;
+    margin-left: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.bid-badge{
+    font-size: 15px;
+}
+
+.description-popover{
+    height: 30px;
+}
+
+.error-prompt{
+    margin-left: 5px;
+    position: relative;
+    top: 2px;
+    height: auto;
+}
+
+@media (min-width:850px){
+    .profile-container{
+        padding: 50px 100px;
+    }
+    
+    #list-tab{
+        max-width: 300px;
+    }
+
+    .myprofile-col{
+        max-width: 400px;
+    }
+}

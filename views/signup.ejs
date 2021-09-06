@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+
+    <script src="script/signup.js"></script>
+
+    <link rel="stylesheet" href="style/signup.css">
+
+    <%- include("./common/plugins.ejs") %>
+</head>
+<body>
+    <%- include("./common/header.ejs") %>
+
+    <div class="body-content">
+      <div class="signup-container mt-3">
+
+        <div class="text-center">
+            <h1>Registration</h1>
+
+            <div class="registration-info mt-3">
+                <span class="font-weight-bold">Register With Us Now and Start Bidding or Auctioning</span>
+            </div>
+        </div>
+
+          <div class="signup-input">
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label text-right">Username: </label>
+                    <div class="col-sm-10 ">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="username" value=""> 
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Username should only contain characters and it is going to be displayed to the other users on this auction system">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label text-right">Email: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="email" value="">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Email valid format : abc@mail.com">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Password: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="password" class="form-control" id="password">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Password should contain at least one number and character with the minimum length of 6">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                       
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Confirm Password: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="password" class="form-control" id="confirm-password">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Confirm password must be same with your password">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                       
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Full Name: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="full-name">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your full name should be real and only contain chracters because it will be the shipping receiver name">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                       
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Phone Number: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="phone-number">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Phone Number should only contain numbers">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Address Line 1:</label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="address-line-1">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="This address is going to be your shipping address">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Address Line 2: (Optional)</label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="address-line-2">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="This address is going to be your shipping address">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">City: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <input type="text" class="form-control" id="city">
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="City is going to be included as your shipping address">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Country: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <select class="form-control" id="country">
+                                <option value="">Select a country</option>
+                            </select>
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Country is going to be included as your shipping address">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label text-right">Account Type: </label>
+                    <div class="col-sm-10">
+                        <div class="signup-col">
+                            <select class="form-control" id="account-type">
+                                <option value="bidder">Bidder/Buyer</option>
+                                <option value="seller">Auctioneer/Seller</option>
+                            </select>
+                            <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Auctioneer is only allowed to sell items and Bidder is only allowed to bid for items">
+                                <i class="fas fa-question-circle question-mark"></i>
+                            </span>
+                        </div>
+                        
+                        <span class="text-danger error-prompt"></span>
+                    </div>
+                </div>
+          </div>
+
+        <div id="signup-error" class="text-danger text-center">
+
+        </div>
+
+        <div class="text-info text-center" id="signup-loader" role="status" style="display: none;">
+            <span class="mt-3 ml-1 spinner-border spinner-border-sm"></span>
+            Loading...
+        </div>
+
+        <div class="mt-3 text-center">
+            <button class="btn btn-dark" onclick="SignUpAccount()">Sign Up</button>
+        </div>
+
+        <div class="form-group mt-3 text-center">
+            <a href="login.html" class="signup-link">Already a member? Login now</a>
+        </div>
+        
+      </div>
+    </div>
+
+    <%- include("./common/plugins.ejs") %>
+</body>
+</html>
+
+<script>
+    $('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+<script>
+    //Check Sign In
+    checkSignIn();
+
+    //Print country
+    printCountry("country");
+</script>

@@ -1,0 +1,39 @@
+.signup-container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+.signup-input{
+    padding:20px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.signup-col{
+    display: flex;
+}
+
+.question-mark{
+    font-size: 25px;
+    margin-left: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.signup-link, .signup-link:hover{
+    color: black;
+}
+
+.error-prompt{
+    position: relative;
+    top: 5px;
+}
+
+@media (min-width:1200px){
+    .signup-input{
+        width: 70%;
+        margin-left: 15%;
+    }
+}

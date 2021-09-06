@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Results</title>
+
+    <%- include("./common/plugins.ejs") %>
+    
+    <link rel="stylesheet" href="style/auctionResults.css">
+
+</head>
+<body>
+    <%- include("./common/header.ejs") %>
+
+    <div class="body-content">
+        <div class="search-container">
+            <div class="search-form-container">
+                <input type="text" name="items" id="" class="form-control" placeholder="Search for anything">
+                <button class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="results-container">
+                <div class="filter-row row">
+                    <div class="results-number col-sm-6 mt-3">
+                        6,166 results for apple...
+                    </div>
+
+                    <div class="col-sm-6 mt-3">
+                        <div class="filter-select-container">
+                            <span id="filter-text">Filters:</span>
+                            <select class="form-control" id="filter-select">
+                                <option value="Best Match">Best Match</option>
+                                <option value="Best Match">Time: Ending Soon</option>
+                                <option value="Best Match">Time: Newly Listed</option>
+                                <option value="Best Match">Price: Lowest First</option>
+                                <option value="Best Match">Price: Highest First</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-display-list row results-row mt-3">
+
+                <div class="display-list col-sm-12 mt-3">
+                    <a href="product-info.html" class="product-link">
+                        <div class="row">
+                            <div class="col-4 result-img-col">
+                                <div class="result-image-container text-center">
+                                    <img src="images/Apple mac mini late2018-min.jpg" alt="" class="result-image">
+                                </div>
+                            </div>
+    
+                            <div class="col-8">
+                                <div class="product-name">
+                                    Apple Watch Series 3 GPS 38mm Space Gray Aluminum Case Black Sport Band MTF02LLA
+                                </div>
+
+                                <div class="product-price text-success mt-3">
+                                    $10.50
+                                </div>
+
+                                <div class="product-details text-secondary">
+                                    2 bids <br>
+                                    6d 18h left <br>
+                                    (Mon, 09:00 AM)
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="display-list col-sm-12 mt-3">
+                    <a href="product-info.html" class="product-link">
+                        <div class="row">
+                            <div class="col-4 result-img-col">
+                                <div class="result-image-container text-center">
+                                    <img src="images/Apple mac mini late2018-min.jpg" alt="" class="result-image">
+                                </div>
+                            </div>
+    
+                            <div class="col-8">
+                                <div class="product-name">
+                                    Apple Watch Series 3 GPS 38mm Space Gray Aluminum Case Black Sport Band MTF02LLA
+                                </div>
+
+                                <div class="product-price text-success mt-3">
+                                    $10.50
+                                </div>
+
+                                <div class="product-details text-secondary">
+                                    2 bids <br>
+                                    6d 18h left <br>
+                                    (Mon, 09:00 AM)
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="display-list col-sm-12 mt-3">
+                    <a href="product-info.html" class="product-link">
+                        <div class="row">
+                            <div class="col-4 result-img-col">
+                                <div class="result-image-container text-center">
+                                    <img src="images/Apple mac mini late2018-min.jpg" alt="" class="result-image">
+                                </div>
+                            </div>
+    
+                            <div class="col-8">
+                                <div class="product-name">
+                                    Apple Watch Series 3 GPS 38mm Space Gray Aluminum Case Black Sport Band MTF02LLA
+                                </div>
+
+                                <div class="product-price text-success mt-3">
+                                    $10.50
+                                </div>
+
+                                <div class="product-details text-secondary">
+                                    2 bids <br>
+                                    6d 18h left <br>
+                                    (Mon, 09:00 AM)
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <%- include("./common/footer.ejs") %>
+</body>
+</html>
+
+<script>
+    //Check Sign In
+    checkSignIn();
+</script>

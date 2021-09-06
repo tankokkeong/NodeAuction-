@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auctioneer Profile</title>
+
+    <script src="script/signup.js"></script>
+
+    <%- include("./common/plugins.ejs") %>
+
+    <!-- Data tablets -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style/myprofile.css">
+
+</head>
+<body>
+    <%- include("./common/header.ejs") %>
+
+    <div class="body-content">
+        <div class="profile-container">
+            <div class="row">
+
+                <div class="col-lg-3 mb-3 myprofile-col">
+                    <div class="bidder-profile-title mb-3">
+                        <h1>Auctioneer Profile</h1>
+                    </div>
+
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">
+                            <i class="far fa-user mr-2"></i> Account Details
+                        </a>
+
+                        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">
+                            <i class="fas fa-shopping-cart mr-2"></i> Auctioned Items
+                        </a>
+
+                        <a class="list-group-item list-group-item-action" id="list-post-auction" data-toggle="list" href="#list-auction-form" role="tab" aria-controls="profile">
+                            <i class="fas fa-gavel mr-2"></i> Post Auction Item
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-9 myprofile-col-1">
+                  <div class="tab-content" id="nav-tabContent">
+
+                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+
+                        <div class="profile-form-title mb-3">
+                            <h2>Account Details</h2>
+                        </div>
+                        
+                        <div class="profile-form-container mt-3">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" id="username">
+                                </div>
+                            </div>
+        
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                                    <div class="col-sm-10">
+                                        <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
+                                        <div class="text-success mt-3" id="password-change-alert" style="display: none;">
+                                          Password changed successful!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" id="full-name">
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 1</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" id="address-line-1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 2</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" id="address-line-2">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">City</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" id="city">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Country</label>
+                                    <div class="col-sm-10">
+                                      <select class="form-control" id="country">
+                                          <option>Select your country</option>
+                                      </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" id="phone-number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-left" id="changes-made" style="display: none;">
+                                <span class="text-success">Changes saved successfully !</span>
+                            </div>
+
+                            <div class="text-right">
+                                <button class="btn btn-dark" onclick="profileChanges()">Save Changes</button>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-payment-method">
+                            <div class="payment-method-title">
+                                <h2>Payment Method</h2>
+                            </div>
+
+                            <div class="payment-method-container mt-3">
+                                <button class="btn btn-dark" onclick="addPayment()">Add Payment</button>
+
+                                <ul class="list-unstyled mt-3">
+                                    <div class="text-info" id="no-payment">
+                                        No payment method found
+                                    </div>
+
+                                    <li class="payment-row" id="payment-row" style="display: none;">
+                                        <div class="payment-col">
+                                            <img src="images/visa.png" class="mr-3" width="50px">
+                                        </div>
+
+                                        <div class="payment-col payment-card-num">
+                                            1234 56XX XXXX 7890
+                                        </div>
+
+                                        <div class="payment-col payment-delete-btn">
+                                            <button class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Delete" onclick="deletePayment()">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </li>
+
+                                    <div class="text-success mt-3" id="payment-added" style="display: none;">
+                                        Payment added successful!
+                                    </div>
+
+                                    <div class="text-danger mt-3" id="payment-deleted" style="display: none;">
+                                        Payment deleted successful!
+                                    </div>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                        <table class="table table-bordered" id="bidding-history-table">
+                            <thead>
+                              <tr class="bg-light">
+                                <th scope="col">Product</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Sold Price(RM)</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Payment Date</th>
+                                <th scope="col">Action</th>
+                              </tr>
+                            </thead>
+        
+                            <tbody id="bidding-list">
+
+                            </tbody>
+                        </table>
+
+                        <script>
+                            sampleAuctioneerPastRecord()
+                        </script>
+                    </div>
+
+                    <div class="tab-pane fade" id="list-auction-form" role="tabpanel" aria-labelledby="list-post-auction">
+                        <div class="auction-form-container">
+                            <div class="auction-form-title text-center mb-3 mt-3">
+                                <h2>Auction Your Item</h2>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Item Image: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="file" class="form-control" id="item-image" onchange="fileValidation('item-image')">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Only the .jpg, .jpeg, and .png file formats are allowed">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Item Name: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="text" class="form-control" id="item-name">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your item name will represent your item and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Item Description: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <textarea name="" id="item-description" cols="30" rows="10" class="form-control"></textarea>
+                                        <span class="popover-dismiss description-popover" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your item description is used to describe the item and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Item Retail Price: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="number" class="form-control" id="item-retail-price" min="1" step="1">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your item price should not be lower than 1 and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Item Starting Price: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="number" class="form-control" id="item-starting-price" min="1" step="1">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your item starting price should not be lower than 1 and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Minimun Price Per Bid: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="number" class="form-control" id="price-per-bid" min="1" step="1">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your minimun price per bid should not be lower than 1 and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Shipping & Handling Fee: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="number" class="form-control" id="shipping-fee" min="1" step="1">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your shipping & handling fee should not be lower than 1 and it should not be empty">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Condition: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <select name="" id="condition" class="form-control">
+                                            <option value="First Hand">First Hand</option>
+                                            <option value="Used">Used</option>
+                                        </select>
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="The condition of the item is either first-hand or used">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Start Date: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="datetime-local" name="" id="start-date" class="form-control">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Start date represents the begining of the auction">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">End Date: </label>
+                                <div class="col-sm-10">
+                                    <div class="auction-col">
+                                        <input type="datetime-local" name="" id="end-date" class="form-control">
+                                        <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="End date represents the begining of the auction">
+                                            <i class="fas fa-question-circle question-mark"></i>
+                                        </span>
+                                    </div>
+                                    <span class="text-danger error-prompt" style="display:none;"></span>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button class="btn btn-dark" onclick="postItemVerification()">Submit</button>
+                            </div>
+
+                            <div class="text-center text-success mt-3" id="posted-successful" style="display: none;">
+                                Item Posted successful!
+                            </div>
+
+                        </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+        </div>
+        
+    </div>
+
+    <%- include("./common/footer.ejs") %>
+</body>
+</html>
+
+<script>
+    $('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+
+//Check Sign In
+checkSignIn();
+
+printCountry("country");
+
+function postItemVerification(){
+    var item_image = document.getElementById("item-image");
+    var item_name = document.getElementById("item-name");
+    var item_description = document.getElementById("item-description");
+    var item_retail_price = document.getElementById("item-retail-price");
+    var item_starting_price = document.getElementById("item-starting-price");
+    var item_price_per_bid = document.getElementById("price-per-bid");
+    var shipping_fee = document.getElementById("shipping-fee");
+    var item_condition = document.getElementById("condition");
+    var start_date = document.getElementById("start-date");
+    var end_date = document.getElementById("end-date");
+    var error_prompt = document.getElementsByClassName("error-prompt");
+    var error_count = 0;
+    var posted_successful = document.getElementById("posted-successful");
+
+    //Validate item image
+    if(item_image.value == "")
+    {
+        error_prompt[0].style.display = "";
+        error_prompt[0].innerHTML = "Item image is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[0].style.display = "none";
+    }
+
+    //Validate item name
+    if(item_name.value == ""){
+        error_prompt[1].style.display = "";
+        error_prompt[1].innerHTML = "Item name is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[1].style.display = "none";
+    }
+
+    //Validate item description value
+    if(item_description.value == ""){
+        error_prompt[2].style.display = "";
+        error_prompt[2].innerHTML = "Item description is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[2].style.display = "none";
+    }
+
+    //Validate item retail price value
+    if(item_retail_price.value == ""){
+        error_prompt[3].style.display = "";
+        error_prompt[3].innerHTML = "Item retail price is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[3].style.display = "none";
+    }
+
+    //Validate item starting price
+    if(item_starting_price.value == ""){
+        error_prompt[4].style.display = "";
+        error_prompt[4].innerHTML = "Item starting price is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[4].style.display = "none";
+    }
+
+    //Validate item price per bid 
+    if(item_price_per_bid.value == ""){
+        error_prompt[5].style.display = "";
+        error_prompt[5].innerHTML = "Item price per bid is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[5].style.display = "none";
+    }
+
+    //Validate shipping fee
+    if(shipping_fee.value == ""){
+        error_prompt[6].style.display = "";
+        error_prompt[6].innerHTML = "Shipping fee is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[6].style.display = "none";
+    }
+
+    //Validate start date
+    if(start_date.value == ""){
+        error_prompt[8].style.display = "";
+        error_prompt[8].innerHTML = "Start date is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[8].style.display = "none";
+    }
+
+    //Validate 
+    if(end_date.value == ""){
+        error_prompt[9].style.display = "";
+        error_prompt[9].innerHTML = "Start date is required!";
+        error_count++;
+    }
+    else
+    {
+        error_prompt[9].style.display = "none";
+    }
+
+    if(error_count == 0){
+        posted_successful.style.display = "";
+
+        //Empty the form
+        item_image.value = "";
+        item_name.value = "" ;
+        item_description.value = "";
+        item_retail_price.value = "";
+        item_starting_price.value = "";
+        item_price_per_bid.value = "";
+        shipping_fee.value = "";
+        item_condition.value = "";
+        start_date.value = "";
+        end_date.value = "";
+
+        setTimeout(function(){
+            posted_successful.style.display = "none";
+        }, 3000);
+    }
+}
+
+unauthorizedAccessed();
+</script>

@@ -1,0 +1,17 @@
+.auction-input-container{
+    padding: 20px;
+    width: 500px;
+}
+
+.bid-list{
+    font-weight: bold;
+}
+
+.error-prompt{
+    position: relative;
+    top: 5px;
+}
+
+#loading-spinner{
+    margin-left: 40px;
+}
