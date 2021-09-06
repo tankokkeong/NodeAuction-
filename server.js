@@ -48,7 +48,8 @@ app.use(session({
 app.get("/", (req, res) => {
 
     if(req.session.userID){
-        res.render('home', {authenticated : true});
+        var account_type = req.session.userID.accountType;
+        res.render('home', {authenticated : true, accountType: account_type});
     }
     else{
         res.render('home', {authenticated : false});
@@ -60,7 +61,8 @@ app.get("/", (req, res) => {
 app.get("/home", (req, res) => {
 
     if(req.session.userID){
-        res.render('home', {authenticated : true});
+        var account_type = req.session.userID.accountType;
+        res.render('home', {authenticated : true, accountType: account_type});
     }
     else{
         res.render('home', {authenticated : false});
@@ -137,7 +139,7 @@ app.get("/bidder-profile", (req, res) => {
         var account_type = req.session.userID.accountType;
 
         if(account_type == "bidder"){
-            res.render('bidder-profile', {authenticated: true});
+            res.render('bidder-profile', {authenticated: true, accountType : account_type});
         }
         else{
             res.redirect("/");
@@ -156,7 +158,7 @@ app.get("/auctioneer-profile", (req, res) => {
         var account_type = req.session.userID.accountType;
 
         if(account_type == "seller"){
-            res.render('auctioneer-profile', {authenticated: true});
+            res.render('auctioneer-profile', {authenticated: true, accountType : account_type});
         }
         else{
             res.redirect("/");
@@ -172,7 +174,8 @@ app.get("/auctioneer-profile", (req, res) => {
 app.get("/product-info", (req, res) => {
 
     if(req.session.userID){
-        res.render('product-info', {authenticated: true});
+        var account_type = req.session.userID.accountType;
+        res.render('product-info', {authenticated: true, accountType: account_type});
     }
     else{
         res.render('product-info', {authenticated: false});
@@ -183,7 +186,9 @@ app.get("/product-info", (req, res) => {
 app.get("/checkout", (req, res) => {
 
     if(req.session.userID){
-        res.render('checkout', {authenticated: true});
+        var account_type = req.session.userID.accountType;
+        res.render('checkout', {authenticated: true}, {accountType: account_type});
+
     }else{
         res.render('checkout', {authenticated: false});
     }
@@ -196,7 +201,9 @@ app.get("/thankyou", (req, res) => {
 
 app.get("/auctionResults", (req, res) => {
     if(req.session.userID){
-        res.render('auctionResults', {authenticated: true});
+        var account_type = req.session.userID.accountType;
+
+        res.render('auctionResults', {authenticated: true, accountType: account_type});
     }
     else{
         res.render('auctionResults', {authenticated: false});

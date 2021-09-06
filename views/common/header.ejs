@@ -16,7 +16,11 @@
 
             <li class="nav-item">
                 <%  if(authenticated){ %>
-                    <a class="nav-link" href="bidder-profile">My profile</a>
+                    <% if(accountType == "bidder"){ %>
+                        <a class="nav-link" href="bidder-profile">My profile</a>
+                    <% }else{ %>
+                        <a class="nav-link" href="auctioneer-profile">My profile</a>
+                    <% } %>
                 <%  }else{ %>
                     <a class="nav-link" href="login">Login</a>
                 <%  } %>
