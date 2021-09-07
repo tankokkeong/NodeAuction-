@@ -102,8 +102,13 @@ app.post("/login", (req, res)=> {
                 userRecord.userID = uid;
                 userRecord.userName = doc.data().Username;
                 userRecord.userEmail = doc.data().Email;
-                userRecord.accountType = doc.data().AccountType
-    
+                userRecord.accountType = doc.data().AccountType;
+                userRecord.addressLine1 =  doc.data().AddressLine1;
+                userRecord.addressLine2 = doc.data().AddressLine2;
+                userRecord.city = doc.data().City;
+                userRecord.country = doc.data().Country;
+                userRecord.fullName = doc.data().FullName;
+                userRecord.phone = doc.data().PhoneNumber;
             }
     
             req.session.userID = userRecord;
@@ -137,9 +142,10 @@ app.get("/bidder-profile", (req, res) => {
 
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
+        var user_record = req.session.userID;
 
         if(account_type == "bidder"){
-            res.render('bidder-profile', {authenticated: true, accountType : account_type});
+            res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record});
         }
         else{
             res.redirect("/");
@@ -156,9 +162,10 @@ app.get("/auctioneer-profile", (req, res) => {
 
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
+        var user_record = req.session.userID;
 
         if(account_type == "seller"){
-            res.render('auctioneer-profile', {authenticated: true, accountType : account_type});
+            res.render('auctioneer-profile', {authenticated: true, accountType : account_type, userRecord: user_record});
         }
         else{
             res.redirect("/");
@@ -171,7 +178,7 @@ app.get("/auctioneer-profile", (req, res) => {
 
 });
 
-app.get("/product-info", (req, res) => {
+app.get("/product-info/:id", (req, res) => {
 
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
@@ -219,4 +226,15 @@ app.get("/logout", (req, res) => {
     });
 
     res.redirect("/");
+});
+
+app.get("/noscript", (req, res) => {
+    res.render("noscript");
+
+    res.end();
+});
+
+// 404 page
+app.use((req, res) => {
+    res.status(404).render('404', { title: '404' });
 });

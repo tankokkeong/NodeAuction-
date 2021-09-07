@@ -489,8 +489,6 @@ function login()
 
 function checkSignIn()
 {
-    var user_status = document.getElementsByClassName("nav-item");
-
     // Check Login
     firebase.auth().onIdTokenChanged(function(user) {
         if (user) {
@@ -502,12 +500,6 @@ function checkSignIn()
             //Get User Info
             getUserInfo(current_user_id);
         }
-        // else
-        // {
-        //     if(user_status != null){
-        //         user_status[1].innerHTML = '<a class="nav-link" href="login">Login</a>';
-        //     }
-        // }
     });
 
 }
@@ -733,43 +725,6 @@ function sampleAuctioneerPastRecord(){
     } );
 }
 
-function displayBidderProfile(){
-    console.log(window.location.pathname);
-
-    var userDoc = firestore.collection("users").doc(current_user_id);
-
-    var username = document.getElementById("username");
-    var password = document.getElementById("password");
-    var full_name = document.getElementById("full-name");
-    var address_line_1 = document.getElementById("address-line-1");
-    var address_line_2 = document.getElementById("address-line-2");
-    var city = document.getElementById("city");
-    var country = document.getElementById("country");
-    var phoneNumber = document.getElementById("phone-number");
-
-    userDoc.get().then((doc) => {
-        if (doc.exists) {
-            console.log("Document data:", doc.data());
-
-            //Display Data
-            username.value = doc.data().Username;
-            full_name.value = doc.data().FullName;
-            address_line_1.value = doc.data().AddressLine1;
-            address_line_2.value = doc.data().AddressLine2;
-            city.value = doc.data().City;
-            phoneNumber.value = doc.data().PhoneNumber;
-
-            //Select the country
-            document.getElementById( doc.data().Country).selected = true;
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-        }
-    }).catch((error) => {
-        console.log("Error getting document:", error);
-    });
-}
-
 function profileChanges(){
     var changes_alert = document.getElementById("changes-made");
 
@@ -843,14 +798,6 @@ function fileValidation(id)
           document.getElementById(id).value = '';
       }
     
-}
-
-function unauthorizedAccessed(){
-    firebase.auth().onIdTokenChanged(function(user) {
-        if (!user) {
-            window.location.href = "home";
-        }
-    });
 }
 
 function dashboardSearch() {

@@ -248,3 +248,10 @@ function printCountry(id){
         select_tag.innerHTML = select_tag.innerHTML + "<option value='" + countries_available[i] + "' id='" + countries_available[i] + "'>" + countries_available[i] + "</option>";
     }
 }
+
+function selectCountry(id){
+    var option = document.getElementById(id);
+
+    //Select the option
+    option.selected = true;
+}
