@@ -112,7 +112,6 @@ app.post("/login", (req, res)=> {
             }
     
             req.session.userID = userRecord;
-            console.log(req.session)
 
             res.end();
             
