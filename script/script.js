@@ -726,15 +726,19 @@ function sampleAuctioneerPastRecord(){
 }
 
 function profileChanges(){
+    var changed_url = window.location.href.split("?");
     var changes_alert = document.getElementById("changes-made");
 
-    //Display alert
-    changes_alert.style.display = "";
+    if(changed_url[1] == "edited"){
+        //Display alert
+        changes_alert.style.display = "";
 
-    //Remove alert after 3 seconds
-    setTimeout(function(){
-        changes_alert.style.display = "none";
-    }, 3000);
+        //Remove alert after 3 seconds
+        setTimeout(function(){
+            changes_alert.style.display = "none";
+        }, 3000);
+    }
+
 }
 
 function addPayment(){

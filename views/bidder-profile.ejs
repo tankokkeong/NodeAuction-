@@ -50,96 +50,98 @@
                             <h2>Account Details</h2>
                         </div>
                         
-                        <div class="profile-form-container mt-3">
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
-                                <div class="col-sm-10">
-                                  <input type="text" class="form-control" id="username" value="<%= userRecord.userName %>">
-                                </div>
-                            </div>
-        
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                        <form action="/edit-bidder" method="POST">
+                            <div class="profile-form-container mt-3">
                                 <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
                                     <div class="col-sm-10">
-                                      <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
-                                      <div class="text-success mt-3" id="password-change-alert" style="display: none;">
-                                        Password changed successful!
-                                      </div>
+                                    <input type="text" class="form-control" id="username" value="<%= userRecord.userName %>" name="username">
                                     </div>
                                 </div>
-                            </div>
-        
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="full-name" value="<%= userRecord.fullName %>">
+            
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                                        <div class="col-sm-10">
+                                        <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
+                                        <div class="text-success mt-3" id="password-change-alert" style="display: none;">
+                                            Password changed successful!
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-        
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 1</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="address-line-1" value="<%= userRecord.addressLine1 %>">
+            
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="full-name" value="<%= userRecord.fullName %>" name="full_name">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 2</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="address-line-2" value="<%= userRecord.addressLine2 %>">
+            
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 1</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="address-line-1" value="<%= userRecord.addressLine1 %>" name="address_line_1">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">City</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="city" value="<%= userRecord.city %>">
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 2</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="address-line-2" value="<%= userRecord.addressLine2 %>" name="address_line_2">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Country</label>
-                                    <div class="col-sm-10">
-                                        <select id="country" class="form-control">
-                                            <option value="">Select Your Country</option>
-                                        </select>
-
-                                    <script>
-                                        printCountry("country");
-                                        selectCountry('<%= userRecord.country %>');
-                                    </script>
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">City</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="city" value="<%= userRecord.city %>" name="city">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="phone-number" value="<%= userRecord.phone %>">
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Country</label>
+                                        <div class="col-sm-10">
+                                            <select id="country" class="form-control" name="country">
+                                                <option value="">Select Your Country</option>
+                                            </select>
+
+                                        <script>
+                                            printCountry("country");
+                                            selectCountry('<%= userRecord.country %>');
+                                        </script>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="text-left" id="changes-made" style="display: none;">
-                                <span class="text-success">Changes saved successfully !</span>
-                            </div>
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="phone-number" value="<%= userRecord.phone %>" name="phone_number">
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div class="text-right">
-                                <button class="btn btn-dark" onclick="profileChanges()">Save Changes</button>
+                                <div class="text-left" id="changes-made" style="display: none;">
+                                    <span class="text-success">Changes saved successfully !</span>
+                                </div>
+
+                                <div class="text-right">
+                                    <button class="btn btn-dark" type="submit">Save Changes</button>
+                                </div>
                             </div>
-                        </div>
-                        
+                        </form>
+
                         <div class="profile-payment-method">
                             <div class="payment-method-title">
                                 <h2>Payment Method</h2>
@@ -221,6 +223,5 @@
 </html>
 
 <script>
-    //Check Sign In
-    checkSignIn();
+    profileChanges();
 </script>
