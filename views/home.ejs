@@ -183,57 +183,28 @@
             </div>
 
             <div class="row product-row mt-3">
-                <div class="col-sm-6 col-lg-3 product-col">
-                    <a href="product-info" class="product-link">
-                        <div class="product-img-container">
-                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
+                <% if (itemArray.length > 0) { %>
+                    <% itemArray.forEach(item => { %>
+                        <div class="col-sm-6 col-lg-3 product-col mt-3">
+                            <a href="product-info?item=<%=item.itemID %>" class="product-link">
+                                <div class="product-img-container">
+                                    <img src="upload/<%=item.itemImage %>" alt="">
+                                </div>
+            
+                                <div class="product-details text-center">
+                                    <span class="product-name font-weight-bold"><%=item.itemName %></span> <br>
+                                    <span class="product-price">$<%=item.itemStartingPrice %></span>
+                                </div>
+                            </a>
                         </div>
     
-                        <div class="product-details text-center">
-                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
-                            <span class="product-price">$329.99</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 product-col">
-                    <a href="product-info" class="product-link">
-                        <div class="product-img-container">
-                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
-                        </div>
-    
-                        <div class="product-details text-center">
-                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
-                            <span class="product-price">$329.99</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 product-col">
-                    <a href="product-info" class="product-link">
-                        <div class="product-img-container">
-                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
-                        </div>
-    
-                        <div class="product-details text-center">
-                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
-                            <span class="product-price">$329.99</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 product-col">
-                    <a href="product-info" class="product-link">
-                        <div class="product-img-container">
-                            <img src="images/adidas yeezy 350 v2-min.jpg" alt="">
-                        </div>
-    
-                        <div class="product-details text-center">
-                            <span class="product-name font-weight-bold">Adidas sneaker</span> <br>
-                            <span class="product-price">$329.99</span>
-                        </div>
-                    </a>
-                </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="mt-3 text-danger font-weight-bold">
+                        No items found...
+                        <%= itemArray.length %>
+                    </div>
+                <% } %>
 
             </div>
         </div>

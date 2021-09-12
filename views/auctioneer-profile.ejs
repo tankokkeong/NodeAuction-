@@ -220,12 +220,12 @@
                                 <h2>Auction Your Item</h2>
                             </div>
 
-                            <form method="POST" action="/post-item">
+                            <form method="POST" action="/post-item" enctype="multipart/form-data">
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-2 col-form-label">Item Image: </label>
                                     <div class="col-sm-10">
                                         <div class="auction-col">
-                                            <input type="file" class="form-control" id="item-image" onchange="fileValidation('item-image')" name="item_image">
+                                            <input type="file" class="form-control" id="item-image" onchange="fileValidation('item-image')" name="file_upload">
                                             <span class="popover-dismiss" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Only the .jpg, .jpeg, and .png file formats are allowed">
                                                 <i class="fas fa-question-circle question-mark"></i>
                                             </span>
@@ -253,7 +253,7 @@
                                     <label for="inputPassword" class="col-sm-2 col-form-label">Item Description: </label>
                                     <div class="col-sm-10">
                                         <div class="auction-col">
-                                            <textarea name="" id="item-description" cols="30" rows="10" class="form-control" name="item_description"></textarea>
+                                            <textarea id="item-description" cols="30" rows="10" class="form-control" name="item_description"></textarea>
                                             <span class="popover-dismiss description-popover" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Reminder" data-content="Your item description is used to describe the item and it should not be empty">
                                                 <i class="fas fa-question-circle question-mark"></i>
                                             </span>
@@ -363,7 +363,7 @@
                                 </div>
     
                                 <div class="text-center">
-                                    <button class="btn btn-dark" onclick="postItemVerification()">Submit</button>
+                                    <button class="btn btn-dark" type="submit">Submit</button>
                                 </div>
     
                                 <div class="text-center text-success mt-3" id="posted-successful" style="display: none;">

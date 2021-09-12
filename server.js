@@ -1,10 +1,26 @@
 const express = require("express");
 const admin = require('firebase-admin');
+const multer  = require('multer');
+const { v4: uuidv4 } = require('uuid');
 var bodyParser = require('body-parser')
 var cors = require('cors')
 var stripJs = require('strip-js');
 var session = require('express-session');   
-var value = 0;
+var file_name = "";
+
+//Store the image
+const storage = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null, 'upload');
+    },
+    filename: (req, file, cb) => {
+        const { originalname } = file;
+        file_name = uuidv4() + "-" + originalname;
+        cb(null, file_name);
+    }
+});
+
+const upload = multer({ storage: storage }); // or simply { dest: 'uploads/' }
 
 
 //Initialize firebase firestore
@@ -47,6 +63,8 @@ app.use(session({
 
 app.get("/", (req, res) => {
 
+    const itemRef = firestore.collection('items');
+
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
         res.render('home', {authenticated : true, accountType: account_type});
@@ -60,15 +78,53 @@ app.get("/", (req, res) => {
 
 app.get("/home", (req, res) => {
 
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-        res.render('home', {authenticated : true, accountType: account_type});
-    }
-    else{
-        res.render('home', {authenticated : false});
-    }
+    const itemRef = firestore.collection('items');
+    var item_array = [];
 
-    res.end();
+    itemRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach((item) => {
+            var itemObject = {
+                itemID : item.id,
+                startingDate: item.data().startingDate,
+                itemImage: item.data().itemImage,
+                itemRetailPrice: item.data().itemRetailPrice,
+                itemDescription: item.data().itemDescription,
+                minimumPerBid: item.data().minimumPerBid,
+                itemName: item.data().itemName,
+                shippingFees: item.data().shippingFees,
+                itemCondition: item.data().itemCondition,
+                itemStartingPrice: item.data().itemStartingPrice,
+                endDate: item.data().endDate
+            };
+
+            item_array.push(itemObject);
+        });
+
+
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
+            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array});
+        }
+        else{
+            res.render('home', {authenticated : false, itemArray: item_array});
+        }
+    
+        res.end();
+
+    }, err => {
+        console.log(`Encountered error: ${err}`);
+
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
+            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array});
+        }
+        else{
+            res.render('home', {authenticated : false, itemArray: item_array});
+        }
+    
+        res.end();
+    });
+
 });
 
 app.get("/login", (req, res) => {
@@ -287,7 +343,50 @@ app.post("/edit-auctioneer", (req, res) => {
 
 });
 
-app.get("/product-info/:id", (req, res) => {
+app.post("/post-item", upload.single('file_upload'), (req, res) => {
+
+    if(req.session.userID){
+
+        console.log(req.file)
+
+        //Get unique id for uploaded images
+        var item_image = file_name;
+
+        //Get user's input
+        var item_name = stripJs(req.body.item_name);
+        var item_description = stripJs(req.body.item_description);
+        var item_retail_price = stripJs(req.body.item_retail_price);
+        var item_starting_price = stripJs(req.body.item_starting_price);
+        var minimum_per_bid = stripJs(req.body.minimum_price_per_bid);
+        var shipping_fees = stripJs(req.body.shipping_fee);
+        var condition = stripJs(req.body.condition);
+        var start_date = stripJs(req.body.start_date);
+        var end_date = stripJs(req.body.end_date);
+
+
+
+        firestore.collection('items').add({
+            itemImage: item_image,
+            itemName : item_name,
+            itemDescription: item_description,
+            itemRetailPrice: item_retail_price,
+            itemStartingPrice: item_starting_price,
+            minimumPerBid: minimum_per_bid,
+            shippingFees : shipping_fees,
+            itemCondition : condition,
+            startingDate : start_date,
+            endDate : end_date
+        }).then(()=>{
+            res.redirect("/auctioneer-profile");
+        });
+    }
+    else{
+        res.render('/', {authenticated: false});
+    }
+    
+});
+
+app.get("/product-info", (req, res) => {
 
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
@@ -316,6 +415,7 @@ app.get("/thankyou", (req, res) => {
 });
 
 app.get("/auctionResults", (req, res) => {
+
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
 
