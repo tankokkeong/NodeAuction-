@@ -8,11 +8,17 @@
 
     <%- include("./common/plugins.ejs") %>
 
+    <script src="script/bidding.js"></script>
+
+    <!-- Ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- Data tablets -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 
     <link rel="stylesheet" href="style/product-info.css">
+
 </head>
 <body>
     <%- include("./common/header.ejs") %>
@@ -22,17 +28,20 @@
             <div class="row">
                 <div class="product-img col-sm-4">
                     <div class="product-img-container">
-                        <img src="images/apple-macbook-air-13-m1-8gb-256gb-ssd-laptop-min.jpg" alt="">
+                        <img src="upload/<%= itemRecord.itemImage %>" alt="">
                     </div>
                 </div>
 
                 <div class="product-info col-sm-8 mt-3">
                     <div class="product-name">
-                        Apple Watch Series 3 GPS 38mm Space Gray Aluminum Case Black Sport Band MTF02LLA
+                        <%= itemRecord.itemName %>
                     </div>
 
                     <div class="product-condition mt-3">
-                        <span>Condition: <strong>Used</strong> </span><br>
+                        <span>Starting Price: <strong>$ <%= itemRecord.startingPrice %></strong></span><br>
+                        <span>Condition: <strong><%= itemRecord.condition %></strong> </span><br>
+                        <span>Start Date: <strong><%= itemRecord.startDate %></strong></span><br>
+                        <span>End Date: <strong><%= itemRecord.endDate %></strong></span><br>
                         <span>Time Left: <strong>6d 17h | Monday, 9.00 AM</strong></span>
                     </div>
 
@@ -44,11 +53,11 @@
                                 </div>
             
                                 <div class="bid-input-container">
-                                    <input type="number" class="form-control" id="bid-input" placeholder="Bid Amount" min="0" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                    <input type="number" class="form-control" name="bid_price" id="bid-input" placeholder="Bid Amount" min="0" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
                                     <span class="text-secondary pl-1" id="place-bid-message"></span>
                                     <div class="text-danger ml-1" id="error-prompt"></div>
                                     <br>
-                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding()">Place Bid</button>
+                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding('<%= itemRecord.itemID %>')">Place Bid</button>
                                 </div>
                             </div>
                         </div>              
@@ -93,19 +102,7 @@
                 </div>
 
                 <div class="product-description-display">
-                    VILLANO. A bed sheet set that inspired by natural and artistic Design. We brings life to your bedroom and give you better night’s sleep.
-                    <br><br>
-                    •100%  Natural Cotton
-                    <br>
-                    •Suitable for everyone
-                    <br>
-                    •Fabric stays Soft & Cold
-                    <br>
-                    •Hypoallergenic
-                    <br>
-                    •Attractive and good Quality
-                    <br>
-                    •600 Thread Count
+                    <%= itemRecord.itemDescription %>
                 </div>
             </div>
 
@@ -122,5 +119,5 @@
     checkSignIn();
 
     //Display bidding history
-    displayBidList();
+    displayBidList('<%= itemRecord.minimumPerBid %>');
 </script>

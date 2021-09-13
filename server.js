@@ -6,6 +6,7 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var stripJs = require('strip-js');
 var session = require('express-session');   
+var helper = require('./helper.js');
 var file_name = "";
 
 //Store the image
@@ -64,16 +65,51 @@ app.use(session({
 app.get("/", (req, res) => {
 
     const itemRef = firestore.collection('items');
+    var item_array = [];
 
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-        res.render('home', {authenticated : true, accountType: account_type});
-    }
-    else{
-        res.render('home', {authenticated : false});
-    }
+    itemRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach((item) => {
+            var itemObject = {
+                itemID : item.id,
+                startingDate: item.data().startingDate,
+                itemImage: item.data().itemImage,
+                itemRetailPrice: item.data().itemRetailPrice,
+                itemDescription: item.data().itemDescription,
+                minimumPerBid: item.data().minimumPerBid,
+                itemName: item.data().itemName,
+                shippingFees: item.data().shippingFees,
+                itemCondition: item.data().itemCondition,
+                itemStartingPrice: item.data().itemStartingPrice,
+                endDate: item.data().endDate
+            };
 
-    res.end();
+            item_array.push(itemObject);
+        });
+
+
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
+            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array});
+        }
+        else{
+            res.render('home', {authenticated : false, itemArray: item_array});
+        }
+    
+        res.end();
+
+    }, err => {
+        console.log(`Encountered error: ${err}`);
+
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
+            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array});
+        }
+        else{
+            res.render('home', {authenticated : false, itemArray: item_array});
+        }
+    
+        res.end();
+    });
 });
 
 app.get("/home", (req, res) => {
@@ -388,15 +424,107 @@ app.post("/post-item", upload.single('file_upload'), (req, res) => {
 
 app.get("/product-info", (req, res) => {
 
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-        res.render('product-info', {authenticated: true, accountType: account_type});
+    //Get item id
+    var id = req.query.item ? req.query.item : ""; 
+
+    if(id != ""){
+
+        const itemRef = firestore.collection('items').doc(id);
+
+        var item_record = new Object();
+
+        itemRef.get().then((doc) => {
+            if (doc.exists) {
+                item_record.itemID = id;
+                item_record.itemName = doc.data().itemName;
+                item_record.itemImage = doc.data().itemImage;
+                item_record.itemDescription = doc.data().itemDescription;
+                item_record.itemStartingPrice =  doc.data().itemStartingPrice;
+                item_record.minimumPerBid = doc.data().minimumPerBid;
+                item_record.startDate = doc.data().startingDate;
+                item_record.endDate = doc.data().endDate;
+                item_record.startingPrice = doc.data().itemStartingPrice;
+                item_record.condition = doc.data().itemCondition;
+                item_record.shippingFees = doc.data().shippingFees;
+
+                if(req.session.userID){
+                    var account_type = req.session.userID.accountType;
+                    res.render('product-info', {authenticated: true, accountType: account_type, itemRecord: item_record});
+                }
+                else{
+                    res.render('product-info', {authenticated: false, itemRecord: item_record});
+                }
+            }
+            
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+            res.redirect("/");
+        });
+
     }
     else{
-        res.render('product-info', {authenticated: false});
+        res.redirect('/');
     }
     
 });
+
+app.post("/submitBid/:id", (req, res) => {
+
+    //Get item id
+    const id = req.params.id;
+    const bidPrice = stripJs(req.body.bid_price);
+
+
+    console.log(id)
+
+    if(id != ""){
+
+        const bidListRef = firestore.collection('bidList').doc(id).collection(id);
+
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
+
+            //Retrieve user input
+            var username = req.session.userID.userName;
+
+            //Bid Time
+            // Get Current Timestamp
+            var date = new Date();
+
+            var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            // Get hour, minute, and second
+            var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
+
+
+            // Get date, month, and year
+            var day = date.getDate(); 
+            var month = months_array[date.getMonth()];
+            var year = date.getFullYear();
+
+            var bid_time = day + " " + month  + " " + year + ", " + time;
+
+            console.log(username + " " + bidPrice + " " + bid_time)
+            bidListRef.add({
+                BidderName : username,
+                BidPrice : bidPrice,
+                BidTime : bid_time,
+            }).then(()=>{
+                res.redirect('/product-info?item=' + id);
+            });
+            
+        }
+        else{
+            res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
+        }
+
+    }
+    else{
+        res.redirect('/');
+    }
+    
+});
+
 
 app.get("/checkout", (req, res) => {
 
