@@ -2,40 +2,88 @@ let firstTimeBidPage = true;
 
 function submitNewBidding(item_id, minimum_bid)
 {
-    var bidder_price = document.getElementById("bid-input").value;
+    var bidder_price = parseInt(document.getElementById("bid-input").value);
     var error_prompt = document.getElementById("error-prompt");
+    var item_id = window.location.href.split("?item=")[1];
+    var bidDoc = firestore.collection("bidList").doc(item_id).collection(item_id);
     var error_count = 0;
+    
 
-    console.log(bidder_price)
+    if(checked_login)
+    {   
+        //Bidder_price validation
+        if(bidder_price == "")
+        {
+            error_prompt.innerHTML = "Bid amount is required!";
+            error_count++;
+        }
+        else
+        {
+            error_prompt.innerHTML = "";
+            bidder_price = parseInt(bidder_price);
+        }
+    
+        
+        if(error_count == 0){
 
-    //Bidder_price validation
-    if(bidder_price == "")
-    {
-        error_prompt.innerHTML = "Bid amount is required!";
-        error_count++;
+            bidDoc.orderBy("BidPrice", "desc").get().then((querySnapshot) => {
+                if(querySnapshot.docs.length > 0)
+                {
+                    var next_bid_minimum =  parseInt(querySnapshot.docs[0].data().BidPrice) + parseInt(minimum_bid)
+
+                    if(bidder_price < next_bid_minimum)
+                    {
+                        error_prompt.innerHTML = "Your bid price is lower than the minimum price per bid!";
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: "/submitBid/" + item_id,
+                            data: {
+                                bid_price: bidder_price
+                            },
+                            success: function(result) {    
+
+                            },
+                            error: function(result) {
+                                alert(result)
+                            }
+                        });
+
+                        //Display submit bid alert
+                        displaySubmitBidAlert();
+                    }
+                }
+                else
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "/submitBid/" + item_id,
+                        data: {
+                            bid_price: bidder_price
+                        },
+                        success: function(result) {    
+
+                        },
+                        error: function(result) {
+                            alert(result)
+                        }
+                    });
+
+                    //Display submit alert
+                    displaySubmitBidAlert();
+                }
+            });
+
+
+        }
     }
     else
     {
-        error_prompt.innerHTML = "";
-        bidder_price = parseInt(bidder_price);
+        error_prompt.innerHTML = "Please login to start bidding!";
     }
-
     
-    if(error_count == 0){
-        $.ajax({
-            type: "POST",
-            url: "/submitBid/" + item_id,
-            data: {
-                bid_price: bidder_price
-            },
-            success: function(result) {    
-            
-            },
-            error: function(result) {
-                alert(result)
-            }
-        });
-    }
 
 }
 
@@ -97,17 +145,19 @@ function displayBidList(minimum_per_bid)
             {
                 bid_list.innerHTML = "<tr>" +
                 "<th scope='row' colspan='4'> No bid history now</th>" + 
+                "<th style='display:none;'></th>" + 
+                "<th style='display:none;'></th>" + 
+                "<th style='display:none;'></th>" + 
                 "</tr>"; 
+
+                //Display outbid alert
+                outbidAlert('');
             }
 
             //Display table
             initializeDataTable();
 
         });
-
-        
-
-        
     });
 
 }
@@ -163,8 +213,10 @@ function outbidAlert(outbidder)
     var outbidAlert = document.getElementById("outbid-alert");
     var outbidAudio = document.getElementById("outbid-audio");
 
-    //Display outbid message
-    outbidAlert.innerHTML = outbidder + " just outbids everyone in this bidding!";
+    if(outbidder.trim() != ""){
+        //Display outbid message
+        outbidAlert.innerHTML = outbidder + " just outbids everyone in this bidding!";
+    }
 
     if(firstTimeBidPage === true)
     {

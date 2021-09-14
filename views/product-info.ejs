@@ -49,15 +49,16 @@
                         <div class="row">
                             <div class="col mb-3">
                                 <div class="current-bid">
-                                    <span>Current Bid:  <strong id="current-bid-amount"></strong></span> 
+                                    <span>Current Bid:  <strong id="current-bid-amount">$ <%= biddingList[0].BidPrice %></strong></span> 
                                 </div>
             
                                 <div class="bid-input-container">
                                     <input type="number" class="form-control" name="bid_price" id="bid-input" placeholder="Bid Amount" min="0" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
-                                    <span class="text-secondary pl-1" id="place-bid-message"></span>
+
+                                    <span class="text-secondary pl-1" id="place-bid-message">place $ <%= parseInt(biddingList[0].BidPrice) + parseInt(itemRecord.minimumPerBid) %> or more</span>
                                     <div class="text-danger ml-1" id="error-prompt"></div>
                                     <br>
-                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding('<%= itemRecord.itemID %>')">Place Bid</button>
+                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding('<%= itemRecord.itemID %>', '<%= itemRecord.minimumPerBid %>')">Place Bid</button>
                                 </div>
                             </div>
                         </div>              
@@ -83,15 +84,37 @@
                 <table class="table table-bordered" id="bidding-history-table">
                     <thead>
                       <tr class="bg-light">
-                        <th scope="col">Rank</th>
-                        <th scope="col">Bidder</th>
-                        <th scope="col">Bid Amount</th>
-                        <th scope="col">Bid Time</th>
+                        <th scope="col" style="width: 25%;">Rank</th>
+                        <th scope="col" style="width: 25%;">Bidder</th>
+                        <th scope="col" style="width: 25%;">Bid Amount</th>
+                        <th scope="col" style="width: 25%;">Bid Time</th>
                       </tr>
                     </thead>
 
                     <tbody id="bidding-list">
-                    
+                        <% if (biddingList.length > 0) { %>
+                            <% var bidding_count = 0; %>
+                            <% biddingList.forEach(bidding => { bidding_count++ %>
+                                <tr>
+                                    <th scope='row'> <%= bidding_count %></th>
+                                    <td><%= bidding.BidderName %></td>
+                                    <td>$ <%= bidding.BidPrice %></td>
+                                    <td><%= bidding.BidTime %></td>
+                                </tr>
+                            <% }) %>
+
+                            <script>
+                                //Display table
+                                initializeDataTable();
+                            </script>
+                        <% } else { %>
+                            <tr>
+                                <th scope='row' colspan='4'> No bid history now</th>
+                                <td style='display:none;'></td>
+                                <td style='display:none;'></td>
+                                <td style='display:none;'></td>
+                            </tr>
+                        <% } %>
                     </tbody>
                   </table>
             </div>  

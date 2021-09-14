@@ -430,8 +430,10 @@ app.get("/product-info", (req, res) => {
     if(id != ""){
 
         const itemRef = firestore.collection('items').doc(id);
+        const bidListRef = firestore.collection('bidList').doc(id).collection(id);
 
         var item_record = new Object();
+        var bidding_list = [];
 
         itemRef.get().then((doc) => {
             if (doc.exists) {
@@ -447,13 +449,24 @@ app.get("/product-info", (req, res) => {
                 item_record.condition = doc.data().itemCondition;
                 item_record.shippingFees = doc.data().shippingFees;
 
-                if(req.session.userID){
-                    var account_type = req.session.userID.accountType;
-                    res.render('product-info', {authenticated: true, accountType: account_type, itemRecord: item_record});
-                }
-                else{
-                    res.render('product-info', {authenticated: false, itemRecord: item_record});
-                }
+                // Get bidding list
+                bidListRef.orderBy("BidPrice", "desc").get().then((bidListSnap) => {
+                    bidListSnap.forEach(bidListDoc => {
+                        bidding_list.push(bidListDoc.data());
+                    });
+
+                    if(req.session.userID){
+                        var account_type = req.session.userID.accountType;
+                        res.render('product-info', {authenticated: true, accountType: account_type, itemRecord: item_record, biddingList : bidding_list});
+                    }
+                    else{
+                        res.render('product-info', {authenticated: false, itemRecord: item_record, biddingList : bidding_list});
+                    }
+                }).catch((error)=>{
+                    console.log("Error getting document:", error);
+                    res.redirect("/");
+                });
+
             }
             
         }).catch((error) => {
@@ -473,9 +486,6 @@ app.post("/submitBid/:id", (req, res) => {
     //Get item id
     const id = req.params.id;
     const bidPrice = stripJs(req.body.bid_price);
-
-
-    console.log(id)
 
     if(id != ""){
 
@@ -504,7 +514,6 @@ app.post("/submitBid/:id", (req, res) => {
 
             var bid_time = day + " " + month  + " " + year + ", " + time;
 
-            console.log(username + " " + bidPrice + " " + bid_time)
             bidListRef.add({
                 BidderName : username,
                 BidPrice : bidPrice,
