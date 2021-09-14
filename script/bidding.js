@@ -1,6 +1,6 @@
 let firstTimeBidPage = true;
 
-function submitNewBidding(item_id, minimum_bid)
+function submitNewBidding(item_id, minimum_bid, startingPrice)
 {
     var bidder_price = parseInt(document.getElementById("bid-input").value);
     var error_prompt = document.getElementById("error-prompt");
@@ -57,22 +57,31 @@ function submitNewBidding(item_id, minimum_bid)
                 }
                 else
                 {
-                    $.ajax({
-                        type: "POST",
-                        url: "/submitBid/" + item_id,
-                        data: {
-                            bid_price: bidder_price
-                        },
-                        success: function(result) {    
+                    var next_bid_minimum =  parseInt(startingPrice) + parseInt(minimum_bid);
 
-                        },
-                        error: function(result) {
-                            alert(result)
-                        }
-                    });
-
-                    //Display submit alert
-                    displaySubmitBidAlert();
+                    if(bidder_price <  next_bid_minimum)
+                    {
+                        error_prompt.innerHTML = "Your bid price is lower than the minimum price per bid!";
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: "/submitBid/" + item_id,
+                            data: {
+                                bid_price: bidder_price
+                            },
+                            success: function(result) {    
+    
+                            },
+                            error: function(result) {
+                                alert(result)
+                            }
+                        });
+    
+                        //Display submit alert
+                        displaySubmitBidAlert();
+                    }
                 }
             });
 
@@ -228,4 +237,39 @@ function outbidAlert(outbidder)
         outbidAudio.play();
     }
 
+}
+
+function countDownTimer(endDate){
+    // Set the date we're counting down to
+    var countDownDate = new Date(endDate).getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+    // Get today's date and time
+    var now = new Date().getTime();
+        
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+        
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    var countdown_container = document.getElementsByClassName("count-down-time");
+        
+    // Output the result in an element with id="demo"
+    countdown_container[0].innerHTML = days;
+    countdown_container[1].innerHTML = hours;
+    countdown_container[2].innerHTML = minutes;
+    countdown_container[3].innerHTML = seconds;
+        
+    // If the count down is over, write some text 
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("count-down-display").innerHTML = "Auction Ended";
+    }
+    }, 1000);
 }

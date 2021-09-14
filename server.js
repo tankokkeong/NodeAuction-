@@ -67,7 +67,7 @@ app.get("/", (req, res) => {
     const itemRef = firestore.collection('items');
     var item_array = [];
 
-    itemRef.onSnapshot(querySnapshot => {
+    itemRef.get().then((querySnapshot) => {
         querySnapshot.forEach((item) => {
             var itemObject = {
                 itemID : item.id,
@@ -117,7 +117,7 @@ app.get("/home", (req, res) => {
     const itemRef = firestore.collection('items');
     var item_array = [];
 
-    itemRef.onSnapshot(querySnapshot => {
+    itemRef.get().then((querySnapshot) => {
         querySnapshot.forEach((item) => {
             var itemObject = {
                 itemID : item.id,
@@ -396,9 +396,12 @@ app.post("/post-item", upload.single('file_upload'), (req, res) => {
         var minimum_per_bid = stripJs(req.body.minimum_price_per_bid);
         var shipping_fees = stripJs(req.body.shipping_fee);
         var condition = stripJs(req.body.condition);
-        var start_date = stripJs(req.body.start_date);
-        var end_date = stripJs(req.body.end_date);
+        var start_date = stripJs(req.body.start_date).split("T");
+        var end_date = stripJs(req.body.end_date).split("T");
 
+        //Format the time
+        start_date = start_date[0] + ", " + start_date[1];
+        end_date = end_date[0] + ", " + end_date[1];
 
 
         firestore.collection('items').add({

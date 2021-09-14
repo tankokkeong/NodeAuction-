@@ -42,23 +42,75 @@
                         <span>Condition: <strong><%= itemRecord.condition %></strong> </span><br>
                         <span>Start Date: <strong><%= itemRecord.startDate %></strong></span><br>
                         <span>End Date: <strong><%= itemRecord.endDate %></strong></span><br>
-                        <span>Time Left: <strong>6d 17h | Monday, 9.00 AM</strong></span>
+                        <span>Time Left: 
+                            <strong id="count-down-display">
+                                <div class="coutdown-row mt-3">
+                                    <div class="coutdown-col">
+                                        <div class="text-center">
+                                            <div class="count-down-time">-</div>
+                                            <div>Days</div>
+                                        </div>
+                                    </div>
+                                    <div class="coutdown-col">
+                                        <div class="text-center">
+                                            <div class="count-down-time">-</div>
+                                            <div>Hours</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="coutdown-col">
+                                        <div class="text-center">
+                                            <div class="count-down-time">-</div>
+                                            <div>Minutes</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="coutdown-col">
+                                        <div class="text-center">
+                                            <div class="count-down-time">-</div>
+                                            <div>Seconds</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </strong>
+                        </span>
+
+                        <script>
+                            //Display countdown timer
+                            countDownTimer('<%= itemRecord.endDate %>');
+                        </script>
                     </div>
 
                     <div class="place-bid mt-3">
                         <div class="row">
                             <div class="col mb-3">
                                 <div class="current-bid">
-                                    <span>Current Bid:  <strong id="current-bid-amount">$ <%= biddingList[0].BidPrice %></strong></span> 
+                                    <span>Current Bid:  
+                                        <strong id="current-bid-amount">$ 
+                                            <%if (biddingList.length > 0){ %>
+                                                <%= biddingList[0].BidPrice %>
+                                            <%}else{ %>
+                                                <%= itemRecord.startingPrice %>
+                                            <%} %>
+                                        </strong>
+                                    </span> 
                                 </div>
             
                                 <div class="bid-input-container">
-                                    <input type="number" class="form-control" name="bid_price" id="bid-input" placeholder="Bid Amount" min="0" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
+                                    <input type="number" class="form-control" name="bid_price" id="bid-input" placeholder="Bid Amount" min="<%= itemRecord.startingPrice %>" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');">
 
-                                    <span class="text-secondary pl-1" id="place-bid-message">place $ <%= parseInt(biddingList[0].BidPrice) + parseInt(itemRecord.minimumPerBid) %> or more</span>
+                                    <span class="text-secondary pl-1" id="place-bid-message">
+                                        place $
+                                        <%if (biddingList.length > 0){ %>
+                                            <%= parseInt(biddingList[0].BidPrice) + parseInt(itemRecord.minimumPerBid) %> 
+                                        <%}else{ %>
+                                            <%= parseInt(itemRecord.startingPrice) + parseInt(itemRecord.minimumPerBid) %> 
+                                        <%} %>
+                                        or more
+                                    </span>
                                     <div class="text-danger ml-1" id="error-prompt"></div>
                                     <br>
-                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding('<%= itemRecord.itemID %>', '<%= itemRecord.minimumPerBid %>')">Place Bid</button>
+                                    <button class="btn btn-primary bid-btn mt-3" onclick="submitNewBidding('<%= itemRecord.itemID %>', '<%= itemRecord.minimumPerBid %>', '<%= itemRecord.startingPrice %>')">Place Bid</button>
                                 </div>
                             </div>
                         </div>              

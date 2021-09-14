@@ -43,6 +43,19 @@
     padding: 10px;
 }
 
+.coutdown-row{
+    display:flex;
+}
+
+.coutdown-col{
+    background-color:black;
+    color:white;
+    margin-left: 15px;
+    width:120px;
+    border-radius:15px;
+    padding: 10px;
+}
+
 @media(min-width:850px){
     .product-name{
         font-size: 35px;
