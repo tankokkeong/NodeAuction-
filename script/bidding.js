@@ -265,11 +265,16 @@ function countDownTimer(endDate){
     countdown_container[1].innerHTML = hours;
     countdown_container[2].innerHTML = minutes;
     countdown_container[3].innerHTML = seconds;
+
+    //Bid button
+    var bid_btn = document.getElementById("place-bid-btn");
         
     // If the count down is over, write some text 
     if (distance < 0) {
         clearInterval(x);
         document.getElementById("count-down-display").innerHTML = "Auction Ended";
+        bid_btn.disabled = "true";
+        bid_btn.innerHTML = "Auction Ended";
     }
     }, 1000);
 }
