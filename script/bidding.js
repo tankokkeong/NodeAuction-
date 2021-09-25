@@ -2,7 +2,7 @@ let firstTimeBidPage = true;
 
 function submitNewBidding(item_id, minimum_bid, startingPrice)
 {
-    var bidder_price = parseInt(document.getElementById("bid-input").value);
+    var bidder_price = document.getElementById("bid-input").value;
     var error_prompt = document.getElementById("error-prompt");
     var item_id = window.location.href.split("?item=")[1];
     var bidDoc = firestore.collection("bidList").doc(item_id).collection(item_id);
@@ -12,7 +12,7 @@ function submitNewBidding(item_id, minimum_bid, startingPrice)
     if(checked_login)
     {   
         //Bidder_price validation
-        if(bidder_price == "")
+        if(bidder_price.length == 0)
         {
             error_prompt.innerHTML = "Bid amount is required!";
             error_count++;

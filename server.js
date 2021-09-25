@@ -488,47 +488,54 @@ app.post("/submitBid/:id", (req, res) => {
 
     //Get item id
     const id = req.params.id;
-    const bidPrice = stripJs(req.body.bid_price);
+    const bidPrice = Number(stripJs(req.body.bid_price));
 
     if(id != ""){
 
-        const bidListRef = firestore.collection('bidList').doc(id).collection(id);
+        //Check number
+        if(!isNaN(bidPrice)){
+            const bidListRef = firestore.collection('bidList').doc(id).collection(id);
 
-        if(req.session.userID){
-            var account_type = req.session.userID.accountType;
+            if(req.session.userID){
+                var account_type = req.session.userID.accountType;
 
-            //Retrieve user input
-            var username = req.session.userID.userName;
+                //Retrieve user input
+                var username = req.session.userID.userName;
 
-            //Bid Time
-            // Get Current Timestamp
-            var date = new Date();
+                //Bid Time
+                // Get Current Timestamp
+                var date = new Date();
 
-            var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-            // Get hour, minute, and second
-            var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
+                // Get hour, minute, and second
+                var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
 
 
-            // Get date, month, and year
-            var day = date.getDate(); 
-            var month = months_array[date.getMonth()];
-            var year = date.getFullYear();
+                // Get date, month, and year
+                var day = date.getDate(); 
+                var month = months_array[date.getMonth()];
+                var year = date.getFullYear();
 
-            var bid_time = day + " " + month  + " " + year + ", " + time;
+                var bid_time = day + " " + month  + " " + year + ", " + time;
 
-            bidListRef.add({
-                BidderName : username,
-                BidPrice : bidPrice,
-                BidTime : bid_time,
-            }).then(()=>{
-                res.redirect('/product-info?item=' + id);
-            });
-            
+                bidListRef.add({
+                    BidderName : username,
+                    BidPrice : bidPrice,
+                    BidTime : bid_time,
+                }).then(()=>{
+                    res.redirect('/product-info?item=' + id);
+                });
+                
+            }
+            else{
+                res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
+            }
         }
         else{
-            res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
+            res.redirect('/');
         }
+        
 
     }
     else{
