@@ -74,11 +74,6 @@
                                 </div>
                             </strong>
                         </span>
-
-                        <script>
-                            //Display countdown timer
-                            countDownTimer('<%= itemRecord.endDate %>');
-                        </script>
                     </div>
 
                     <div class="place-bid mt-3">
@@ -110,8 +105,13 @@
                                     </span>
                                     <div class="text-danger ml-1" id="error-prompt"></div>
                                     <br>
-                                    <button class="btn btn-primary bid-btn mt-3" id="place-bid-btn" onclick="submitNewBidding('<%= itemRecord.itemID %>', '<%= itemRecord.minimumPerBid %>', '<%= itemRecord.startingPrice %>')">Place Bid</button>
+                                    <button class="btn btn-primary bid-btn mt-3" id="place-bid-btn" onclick="submitNewBidding('<%= itemRecord.itemID %>', '<%= itemRecord.minimumPerBid %>', '<%= itemRecord.startingPrice %>', '<%= accountType %>')" style="display: none;">Place Bid</button>
                                 </div>
+
+                                <script>
+                                    //Display countdown timer
+                                    countDownTimer('<%= itemRecord.endDate %>', '<%= itemRecord.startDate %>');
+                                </script>
                             </div>
                         </div>              
                     </div>

@@ -1,6 +1,6 @@
 let firstTimeBidPage = true;
 
-function submitNewBidding(item_id, minimum_bid, startingPrice)
+function submitNewBidding(item_id, minimum_bid, startingPrice, accountType)
 {
     var bidder_price = document.getElementById("bid-input").value;
     var error_prompt = document.getElementById("error-prompt");
@@ -11,16 +11,24 @@ function submitNewBidding(item_id, minimum_bid, startingPrice)
 
     if(checked_login)
     {   
-        //Bidder_price validation
-        if(bidder_price.length == 0)
-        {
-            error_prompt.innerHTML = "Bid amount is required!";
-            error_count++;
+        //Check is bidder
+        if(accountType == "bidder"){
+
+            //Bidder_price validation
+            if(bidder_price.length == 0)
+            {
+                error_prompt.innerHTML = "Bid amount is required!";
+                error_count++;
+            }
+            else
+            {
+                error_prompt.innerHTML = "";
+                bidder_price = parseInt(bidder_price);
+            }
         }
-        else
-        {
-            error_prompt.innerHTML = "";
-            bidder_price = parseInt(bidder_price);
+        else{
+            error_prompt.innerHTML = "Only the bidders are allowed to bid!";
+            error_count++;
         }
     
         
@@ -239,9 +247,15 @@ function outbidAlert(outbidder)
 
 }
 
-function countDownTimer(endDate){
+function countDownTimer(endDate, startDate){
+    //Bid button
+    var bid_btn = document.getElementById("place-bid-btn");
+
     // Set the date we're counting down to
     var countDownDate = new Date(endDate).getTime();
+
+    //Get the start date
+    var startDate = new Date(startDate).getTime();
 
     // Update the count down every 1 second
     var x = setInterval(function() {
@@ -266,15 +280,32 @@ function countDownTimer(endDate){
     countdown_container[2].innerHTML = minutes;
     countdown_container[3].innerHTML = seconds;
 
-    //Bid button
-    var bid_btn = document.getElementById("place-bid-btn");
-        
-    // If the count down is over, write some text 
-    if (distance < 0) {
+    //If the auction is not started yet
+    if(startDate > now){
+
+        //Display the bid button
+        bid_btn.style.display = "";
+
+        bid_btn.disabled = "true";
+        bid_btn.innerHTML = "Starting Soon";
+    }
+    else if(distance < 0){
+
+        //Display the bid button
+        bid_btn.style.display = "";
+
+        // If the count down is over, write some text 
         clearInterval(x);
         document.getElementById("count-down-display").innerHTML = "Auction Ended";
-        bid_btn.disabled = "true";
+        bid_btn.disabled = true;
         bid_btn.innerHTML = "Auction Ended";
     }
+    else{
+        //The bid is ongoing
+        bid_btn.style.display = ""; //Display the bid button
+        bid_btn.disabled = false;
+        bid_btn.innerHTML = "Place Bid";
+    }
+
     }, 1000);
 }

@@ -3,7 +3,8 @@
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 var stripJs = require('strip-js');
-var helper = require('../server');
+var fileHelper = require('../server');
+var helper = require('../helper');
 
 exports.product_info_page = function(req, res){
 
@@ -19,6 +20,16 @@ exports.product_info_page = function(req, res){
 
         itemRef.get().then((doc) => {
             if (doc.exists) {
+
+                // Check if auction ended
+                if(helper.isAuctionEnded(doc.data().endDate)){
+
+                    //Check if update winners before
+                    if(doc.data().winner.length === 0){
+                        updateAuctionWinner(id);
+                    }
+                }
+
                 item_record.itemID = id;
                 item_record.itemName = doc.data().itemName;
                 item_record.itemImage = doc.data().itemImage;
@@ -67,7 +78,7 @@ exports.post_item = function(req, res){
     if(req.session.userID){
 
         //Get unique id for uploaded images
-        var item_image = helper.getFileName();
+        var item_image = fileHelper.getFileName();
 
         //Get user's input
         var item_name = stripJs(req.body.item_name);
@@ -97,7 +108,8 @@ exports.post_item = function(req, res){
             itemCondition : condition,
             startingDate : start_date,
             endDate : end_date,
-            postedBy: posted_by
+            postedBy: posted_by,
+            winner: ""
         }).then(()=>{
             res.redirect("/auctioneer-profile");
         });
@@ -122,33 +134,41 @@ exports.submit_bid = function(req, res){
             if(req.session.userID){
                 var account_type = req.session.userID.accountType;
 
-                //Retrieve user input
-                var username = req.session.userID.userName;
+                //Check if is bidder
+                if(account_type == "bidder"){
+                    //Retrieve user input
+                    var username = req.session.userID.userName;
 
-                //Bid Time
-                // Get Current Timestamp
-                var date = new Date();
+                    //Bid Time
+                    // Get Current Timestamp
+                    var date = new Date();
 
-                var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-                // Get hour, minute, and second
-                var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
+                    // Get hour, minute, and second
+                    var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
 
 
-                // Get date, month, and year
-                var day = date.getDate(); 
-                var month = months_array[date.getMonth()];
-                var year = date.getFullYear();
+                    // Get date, month, and year
+                    var day = date.getDate(); 
+                    var month = months_array[date.getMonth()];
+                    var year = date.getFullYear();
 
-                var bid_time = day + " " + month  + " " + year + ", " + time;
+                    var bid_time = day + " " + month  + " " + year + ", " + time;
+                    var bid_by = req.session.userID.userID;
 
-                bidListRef.add({
-                    BidderName : username,
-                    BidPrice : bidPrice,
-                    BidTime : bid_time,
-                }).then(()=>{
-                    res.redirect('/product-info?item=' + id);
-                });
+                    bidListRef.add({
+                        BidderName : username,
+                        BidPrice : bidPrice,
+                        BidTime : bid_time,
+                        BidBy: bid_by
+                    }).then(()=>{
+                        res.redirect('/product-info?item=' + id);
+                    });
+                }
+                else{
+                    res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
+                }
                 
             }
             else{
@@ -164,4 +184,59 @@ exports.submit_bid = function(req, res){
     else{
         res.redirect('/');
     }
+}
+
+function updateAuctionWinner(itemId){
+    const itemRef = firestore.collection('items').doc(itemId);
+    const bidingListRef = firestore.collection("bidList").doc(itemId).collection(itemId);
+    var itemObject = new Object();
+
+    //Get the bidder with the highest bid
+    bidingListRef.orderBy("BidPrice", "desc").limit(1).get().then((querySnapshot)=>{
+
+        querySnapshot.forEach((doc) => {
+
+            if (doc.exists) {
+                //Get the users ID
+                var bid_by = doc.data().BidBy;
+    
+                itemRef.get().then((item_doc) => {
+    
+                    if(item_doc.exists){
+    
+                        itemObject.itemImage = item_doc.data().itemImage;
+                        itemObject.itemName = item_doc.data().itemName;
+                        itemObject.itemDescription = item_doc.data().itemDescription;
+                        itemObject.itemRetailPrice = item_doc.data().itemRetailPrice;
+                        itemObject.itemStartingPrice = item_doc.data().itemStartingPrice;
+                        itemObject.minimumPerBid = item_doc.data().minimumPerBid,
+                        itemObject.shippingFees = item_doc.data().shippingFees;
+                        itemObject.itemCondition = item_doc.data().itemCondition;
+                        itemObject.startingDate = item_doc.data().startingDate;
+                        itemObject.endDate = item_doc.data().endDate;
+                        itemObject.postedBy = item_doc.data().postedBy;
+                        itemObject.winner= bid_by;
+    
+                        //Set the winner of the auction
+                        itemRef.set(
+                            itemObject
+                        ).then(()=>{
+                            
+                            //Add the item to the winner's shopping cart
+                            const shoppingCartRef = firestore.collection('shoppingCart').doc(bid_by).collection(itemId);
+    
+                            shoppingCartRef.add(itemObject)
+                        });
+                    }
+                    else{
+                        // item_doc.data() will be undefined in this case
+                        console.log("No such document in item!");
+                    }
+                });
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document in biding list!" + itemId);
+            }
+        });
+    });
 }

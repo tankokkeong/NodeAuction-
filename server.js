@@ -6,7 +6,6 @@ var stripJs = require('strip-js');
 var session = require('express-session');   
 var helper = require('./helper.js');
 
-
 const multer  = require('multer');
 const { v4: uuidv4 } = require('uuid');
 var file_name = "";
