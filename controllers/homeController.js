@@ -49,3 +49,14 @@ exports.home_page = function(req, res){
         res.end();
     });
 }
+
+exports.search_page = function(req, res){
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('auctionResults', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('auctionResults', {authenticated: false});
+    }
+}

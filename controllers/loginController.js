@@ -8,10 +8,9 @@ exports.login_page = function(req, res){
 }
 
 exports.logout = function(req, res){
-    req.session.destroy(function(err) {
-        // cannot access session here
-        console.log(err)
-    });
+
+    //Logout
+    req.session.destroy();
 
     res.redirect("/");
 }

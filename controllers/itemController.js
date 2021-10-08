@@ -3,6 +3,7 @@
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 var stripJs = require('strip-js');
+var helper = require('../server');
 
 exports.product_info_page = function(req, res){
 
@@ -63,14 +64,10 @@ exports.product_info_page = function(req, res){
 
 exports.post_item = function(req, res){
 
-    console.log(req.files)
     if(req.session.userID){
 
-        var file_name = "";
-
-
         //Get unique id for uploaded images
-        var item_image = file_name;
+        var item_image = helper.getFileName();
 
         //Get user's input
         var item_name = stripJs(req.body.item_name);
@@ -107,5 +104,64 @@ exports.post_item = function(req, res){
     }
     else{
         res.render('/', {authenticated: false});
+    }
+}
+
+exports.submit_bid = function(req, res){
+
+    //Get item id
+    const id = req.params.id;
+    const bidPrice = Number(stripJs(req.body.bid_price));
+
+    if(id != ""){
+
+        //Check number
+        if(!isNaN(bidPrice)){
+            const bidListRef = firestore.collection('bidList').doc(id).collection(id);
+
+            if(req.session.userID){
+                var account_type = req.session.userID.accountType;
+
+                //Retrieve user input
+                var username = req.session.userID.userName;
+
+                //Bid Time
+                // Get Current Timestamp
+                var date = new Date();
+
+                var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                // Get hour, minute, and second
+                var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
+
+
+                // Get date, month, and year
+                var day = date.getDate(); 
+                var month = months_array[date.getMonth()];
+                var year = date.getFullYear();
+
+                var bid_time = day + " " + month  + " " + year + ", " + time;
+
+                bidListRef.add({
+                    BidderName : username,
+                    BidPrice : bidPrice,
+                    BidTime : bid_time,
+                }).then(()=>{
+                    res.redirect('/product-info?item=' + id);
+                });
+                
+            }
+            else{
+                res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
+            }
+        }
+        else{
+            res.redirect('/');
+        }
+        
+
+    }
+    else{
+        res.redirect('/');
     }
 }

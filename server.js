@@ -6,6 +6,29 @@ var stripJs = require('strip-js');
 var session = require('express-session');   
 var helper = require('./helper.js');
 
+
+const multer  = require('multer');
+const { v4: uuidv4 } = require('uuid');
+var file_name = "";
+
+exports.getFileName = function() {
+    return file_name;
+};
+
+//Store the image
+const storage = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null, 'upload');
+    },
+    filename: (req, file, cb) => {
+        const { originalname } = file;
+        file_name = uuidv4() + "-" + originalname;
+        cb(null, file_name);
+    }
+});
+
+const upload = multer({ storage: storage }); // or simply { dest: 'uploads/' }
+
 //Initialize firebase firestore
 var serviceAccount = require("./serviceAccountKey.json");
 
@@ -51,7 +74,8 @@ var signupController = require('./controllers/signupController');
 var bidderController = require('./controllers/bidderController');
 var auctioneerController = require('./controllers/auctioneerController');
 var itemController = require('./controllers/itemController');
-var uploadController = require('./controllers/uploadController');
+var checkoutController = require('./controllers/checkoutController');
+var errorController = require('./controllers/errorController');
 
 app.get("/", homeController.home_page);
 
@@ -71,109 +95,21 @@ app.get("/auctioneer-profile", auctioneerController.auctionner_profile_page);
 
 app.post("/edit-auctioneer", auctioneerController.edit_auctioneer);
 
-app.post("/post-item", itemController.post_item);
+app.post("/post-item", upload.single('file_upload'), itemController.post_item);
 
 app.get("/product-info", itemController.product_info_page);
 
-app.post("/submitBid/:id", (req, res) => {
+app.post("/submitBid/:id", itemController.submit_bid);
 
-    //Get item id
-    const id = req.params.id;
-    const bidPrice = Number(stripJs(req.body.bid_price));
+app.get("/checkout", checkoutController.checkout_page);
 
-    if(id != ""){
+app.get("/thankyou", checkoutController.thankyou_page);
 
-        //Check number
-        if(!isNaN(bidPrice)){
-            const bidListRef = firestore.collection('bidList').doc(id).collection(id);
-
-            if(req.session.userID){
-                var account_type = req.session.userID.accountType;
-
-                //Retrieve user input
-                var username = req.session.userID.userName;
-
-                //Bid Time
-                // Get Current Timestamp
-                var date = new Date();
-
-                var months_array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-                // Get hour, minute, and second
-                var time = helper.checkAMorPM(date.getHours(), helper.checkTimeDigit(date.getMinutes()), helper.checkTimeDigit(date.getSeconds()) );
-
-
-                // Get date, month, and year
-                var day = date.getDate(); 
-                var month = months_array[date.getMonth()];
-                var year = date.getFullYear();
-
-                var bid_time = day + " " + month  + " " + year + ", " + time;
-
-                bidListRef.add({
-                    BidderName : username,
-                    BidPrice : bidPrice,
-                    BidTime : bid_time,
-                }).then(()=>{
-                    res.redirect('/product-info?item=' + id);
-                });
-                
-            }
-            else{
-                res.redirect('/product-info?item=' + id + "&unauthorized=" + 'true');
-            }
-        }
-        else{
-            res.redirect('/');
-        }
-        
-
-    }
-    else{
-        res.redirect('/');
-    }
-    
-});
-
-
-app.get("/checkout", (req, res) => {
-
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-        res.render('checkout', {authenticated: true}, {accountType: account_type});
-
-    }else{
-        res.render('checkout', {authenticated: false});
-    }
-    
-});
-
-app.get("/thankyou", (req, res) => {
-    res.render('checkout');
-});
-
-app.get("/auctionResults", (req, res) => {
-
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-
-        res.render('auctionResults', {authenticated: true, accountType: account_type});
-    }
-    else{
-        res.render('auctionResults', {authenticated: false});
-    }
-    
-});
+app.get("/auctionResults", homeController.search_page);
 
 app.get("/logout", loginController.logout);
 
-app.get("/noscript", (req, res) => {
-    res.render("noscript");
-
-    res.end();
-});
+app.get("/noscript", errorController.no_script_page);
 
 // 404 page
-app.use((req, res) => {
-    res.status(404).render('404', { title: '404' });
-});
+app.use(errorController.error_404_page);
