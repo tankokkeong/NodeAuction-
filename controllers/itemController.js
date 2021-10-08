@@ -53,7 +53,8 @@ exports.product_info_page = function(req, res){
                         res.render('product-info', {authenticated: true, accountType: account_type, itemRecord: item_record, biddingList : bidding_list});
                     }
                     else{
-                        res.render('product-info', {authenticated: false, itemRecord: item_record, biddingList : bidding_list});
+                        var account_type = "Non";
+                        res.render('product-info', {authenticated: false, accountType: account_type, itemRecord: item_record, biddingList : bidding_list});
                     }
                 }).catch((error)=>{
                     console.log("Error getting document:", error);
@@ -79,6 +80,7 @@ exports.post_item = function(req, res){
 
         //Get unique id for uploaded images
         var item_image = fileHelper.getFileName();
+        var item_keywords = itemKeywordsGenerator(stripJs(req.body.item_name));
 
         //Get user's input
         var item_name = stripJs(req.body.item_name);
@@ -109,7 +111,8 @@ exports.post_item = function(req, res){
             startingDate : start_date,
             endDate : end_date,
             postedBy: posted_by,
-            winner: ""
+            winner: "",
+            keywords : item_keywords
         }).then(()=>{
             res.redirect("/auctioneer-profile");
         });
@@ -239,4 +242,19 @@ function updateAuctionWinner(itemId){
             }
         });
     });
+}
+
+function itemKeywordsGenerator(item_name){
+    var item_lowercase = item_name.toLowerCase();
+    var words_array = item_lowercase.split(" ");
+
+    //break down letters
+    for(var i = 1; i <= item_name.length; i++){
+        words_array.push(item_lowercase.substring(0, i) );
+    }
+
+    //Push empty string
+    words_array.push("");
+
+    return words_array;
 }

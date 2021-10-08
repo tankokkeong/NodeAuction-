@@ -533,16 +533,16 @@ function fileValidation(id)
 {
     var file = document.getElementById(id).value;
     file = file.split(".");
-      
-      switch (file[1].toUpperCase()) {
+    
+    switch (file[1].toUpperCase()) {
         case 'JPG':
         case 'JPEG':
         case 'PNG':
-          break;
+            break;
         default:
-          alert('Only jpg, jpeg and png images file type is allowed');
-          document.getElementById(id).value = '';
-      }
+            alert('Only jpg, jpeg and png images file type is allowed');
+            document.getElementById(id).value = '';
+    }
     
 }
 

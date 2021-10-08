@@ -1,6 +1,7 @@
+const admin = require('firebase-admin');
+const firestore = admin.firestore();
+
 exports.home_page = function(req, res){
-    const admin = require('firebase-admin');
-    const firestore = admin.firestore();
 
     const itemRef = firestore.collection('items');
     var item_array = [];
@@ -51,12 +52,51 @@ exports.home_page = function(req, res){
 }
 
 exports.search_page = function(req, res){
+
+    //Get the search query
+    var search_query = req.query.item ? req.query.item : ""; 
+    const itemRef = firestore.collection('items');
+    var search_data = [];
+
     if(req.session.userID){
         var account_type = req.session.userID.accountType;
 
-        res.render('auctionResults', {authenticated: true, accountType: account_type});
+        //Search the match item
+        itemRef.where("keywords", "array-contains", search_query.toLowerCase()).get().then((querySnapshot)=>{
+            querySnapshot.forEach((doc) => {
+                var item_object = new Object();
+
+                item_object.itemID = doc.id;
+                item_object.itemName = doc.data().itemName;
+                item_object.startingPrice = doc.data().startingPrice;
+                item_object.startingDate = doc.data().startingDate;
+                item_object.endDate = doc.data().endDate;
+                item_object.itemImage = doc.data().itemImage;
+                search_data.push(item_object);
+            });
+
+            res.render('auctionResults', {authenticated: true, accountType: account_type, searchQuery: search_query, searchData: search_data});
+        });
+
+        
     }
     else{
-        res.render('auctionResults', {authenticated: false});
+
+        //Search the match item
+        itemRef.where("keywords", "array-contains", search_query.toLowerCase()).get().then((querySnapshot)=>{
+            querySnapshot.forEach((doc) => {
+                var item_object = new Object();
+
+                item_object.itemID = doc.id;
+                item_object.itemName = doc.data().itemName;
+                item_object.itemStartingPrice = doc.data().itemStartingPrice;
+                item_object.startingDate = doc.data().startingDate;
+                item_object.endDate = doc.data().endDate;
+                item_object.itemImage = doc.data().itemImage;
+                search_data.push(item_object);
+            });
+
+            res.render('auctionResults', {authenticated: false, searchQuery: search_query, searchData: search_data});
+        });
     }
 }
