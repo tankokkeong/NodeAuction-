@@ -36,210 +36,249 @@
                         </a>
 
                         <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">
-                            <i class="fas fa-shopping-cart mr-2"></i> Past Bid
+                            <i class="fas fa-fist-raised mr-2"></i> Past Bid
+                        </a>
+
+                        <a class="list-group-item list-group-item-action" id="list-payment-list" data-toggle="list" href="#list-payment" role="tab" aria-controls="payment">
+                            <i class="fas fa-money-check-alt mr-2"></i> Payment Records
                         </a>
                     </div>
                 </div>
 
                 <div class="col-lg-9 myprofile-col-1">
-                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-content" id="nav-tabContent">
 
-                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
 
-                        <div class="profile-form-title mb-3">
-                            <h2>Account Details</h2>
+                            <div class="profile-form-title mb-3">
+                                <h2>Account Details</h2>
+                            </div>
+                            
+                            <form action="/edit-bidder" method="POST">
+                                <div class="profile-form-container mt-3">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="username" value="<%= userRecord.userName %>" name="username">
+                                        </div>
+                                    </div>
+                
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                                            <div class="col-sm-10">
+                                            <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
+                                            <div class="text-success mt-3" id="password-change-alert" style="display: none;">
+                                                Password changed successful!
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="full-name" value="<%= userRecord.fullName %>" name="full_name">
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 1</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="address-line-1" value="<%= userRecord.addressLine1 %>" name="address_line_1">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 2</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="address-line-2" value="<%= userRecord.addressLine2 %>" name="address_line_2">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">City</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="city" value="<%= userRecord.city %>" name="city">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Country</label>
+                                            <div class="col-sm-10">
+                                                <select id="country" class="form-control" name="country">
+                                                    <option value="">Select Your Country</option>
+                                                </select>
+
+                                            <script>
+                                                printCountry("country");
+                                                selectCountry('<%= userRecord.country %>');
+                                            </script>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="phone-number" value="<%= userRecord.phone %>" name="phone_number">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-left" id="changes-made" style="display: none;">
+                                        <span class="text-success">Changes saved successfully !</span>
+                                    </div>
+
+                                    <div class="text-right">
+                                        <button class="btn btn-dark" type="submit">Save Changes</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="profile-payment-method">
+                                <div class="payment-method-title">
+                                    <h2>Payment Method</h2>
+                                </div>
+
+                                <div class="payment-method-container mt-3">
+                                    <button class="btn btn-dark" onclick="addPayment()">Add Payment</button>
+
+                                    <ul class="list-unstyled mt-3">
+                                        <div class="text-info" id="no-payment">
+                                            No payment method found
+                                        </div>
+
+                                        <li class="payment-row" id="payment-row" style="display:none;">
+                                            <div class="payment-col">
+                                                <img src="images/visa.png" class="mr-3" width="50px">
+                                            </div>
+
+                                            <div class="payment-col payment-card-num">
+                                                1234 56XX XXXX 7890
+                                            </div>
+
+                                            <div class="payment-col payment-delete-btn">
+                                                <button class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Delete" onclick="deletePayment()">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+
+                                        <div class="text-success mt-3" id="payment-added" style="display: none;">
+                                            Payment added successful!
+                                        </div>
+
+                                        <div class="text-danger mt-3" id="payment-deleted" style="display: none;">
+                                            Payment deleted successful!
+                                        </div>
+
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <form action="/edit-bidder" method="POST">
-                            <div class="profile-form-container mt-3">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
-                                    <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="username" value="<%= userRecord.userName %>" name="username">
-                                    </div>
-                                </div>
-            
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
-                                        <div class="col-sm-10">
-                                        <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
-                                        <div class="text-success mt-3" id="password-change-alert" style="display: none;">
-                                            Password changed successful!
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
-            
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
-                                        <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="full-name" value="<%= userRecord.fullName %>" name="full_name">
-                                        </div>
-                                    </div>
-                                </div>
-            
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 1</label>
-                                        <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="address-line-1" value="<%= userRecord.addressLine1 %>" name="address_line_1">
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Address Line 2</label>
-                                        <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="address-line-2" value="<%= userRecord.addressLine2 %>" name="address_line_2">
-                                        </div>
-                                    </div>
-                                </div>
+                    
 
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">City</label>
-                                        <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="city" value="<%= userRecord.city %>" name="city">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Country</label>
-                                        <div class="col-sm-10">
-                                            <select id="country" class="form-control" name="country">
-                                                <option value="">Select Your Country</option>
-                                            </select>
-
-                                        <script>
-                                            printCountry("country");
-                                            selectCountry('<%= userRecord.country %>');
-                                        </script>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
-                                        <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="phone-number" value="<%= userRecord.phone %>" name="phone_number">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text-left" id="changes-made" style="display: none;">
-                                    <span class="text-success">Changes saved successfully !</span>
-                                </div>
-
-                                <div class="text-right">
-                                    <button class="btn btn-dark" type="submit">Save Changes</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        <div class="profile-payment-method">
-                            <div class="payment-method-title">
-                                <h2>Payment Method</h2>
+                        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                            <div class="mb-3">
+                                <h2>Bid Records</h2>
                             </div>
 
-                            <div class="payment-method-container mt-3">
-                                <button class="btn btn-dark" onclick="addPayment()">Add Payment</button>
-
-                                <ul class="list-unstyled mt-3">
-                                    <div class="text-info" id="no-payment">
-                                        No payment method found
-                                    </div>
-
-                                    <li class="payment-row" id="payment-row" style="display:none;">
-                                        <div class="payment-col">
-                                            <img src="images/visa.png" class="mr-3" width="50px">
+                            <table class="table table-bordered" id="bidding-history-table">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Starting Price(USD)</th>
+                                        <th scope="col">Bid Price (USD)</th>
+                                        <th scope="col">Bid Date</th>
+                                        <th scope="col">Auction Start Date</th>
+                                        <th scope="col">Auction End Date</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+            
+                                <tbody id="bidding-list">
+                                    <% if (bidHistory.length > 0) { %>
+                                        <% bidHistory.forEach(history => { %>
+                                            <tr>
+                                                <th scope='row' class='text-center'><img src='upload/<%= history.itemImage %>' width='100%'></th>
+                                                <td><%= history.itemName %></td>
+                                                <td>$ <%= history.startingPrice %></td>                                           
+                                                <td>$ <%= history.bidPrice %></td>
+                                                <td><%= history.bidTime %></td>
+                                                <td><%= history.startDate %></td>
+                                                <td><%= history.endDate %></td>
+                                                <td><a href='product-info?item=<%= history.itemID %>' class='btn btn-primary mt-1'><i class="fas fa-eye"></i> View</a></td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                            You have not bid any items yet...
                                         </div>
+                                    <% } %>
+                                </tbody>
+                            </table>
 
-                                        <div class="payment-col payment-card-num">
-                                            1234 56XX XXXX 7890
-                                        </div>
+                            <script>
+                                $(document).ready( function () {
+                                    //Create new Datatable
+                                    $('#bidding-history-table').DataTable();
 
-                                        <div class="payment-col payment-delete-btn">
-                                            <button class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Delete" onclick="deletePayment()">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </li>
-
-                                    <div class="text-success mt-3" id="payment-added" style="display: none;">
-                                        Payment added successful!
-                                    </div>
-
-                                    <div class="text-danger mt-3" id="payment-deleted" style="display: none;">
-                                        Payment deleted successful!
-                                    </div>
-
-                                  </ul>
-                            </div>
+                                } );
+                            </script>
                         </div>
+
+                        <div class="tab-pane fade show" id="list-payment" role="tabpanel" aria-labelledby="list-payment-list">
+                            <div class="mb-3">
+                                <h2>Payment Records</h2>
+                            </div>
+
+                            <table class="table table-bordered" id="payment-history-table">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Starting Price(USD)</th>
+                                        <th scope="col">Deal Price (USD)</th>
+                                        <th scope="col">Auction Start Date</th>
+                                        <th scope="col">Auction End Date</th>
+                                        <th scope="col">Payment Method</th>
+                                        <th scope="col">Payment Status</th>
+                                        <th scope="col">Payment Date</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+            
+                                <tbody id="bidding-list">
+                                    
+                                </tbody>
+                            </table>
+
+                            <script>
+                                $(document).ready( function () {
+                                    //Create new Datatable
+                                    $('#payment-history-table').DataTable();
+
+                                } );
+                            </script>
+                        </div>
+
                     </div>
-
-                   
-
-                    <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                        <div class="payment-method-title mb-3">
-                            <h2>Bid Records</h2>
-                        </div>
-
-                        <table class="table table-bordered" id="bidding-history-table">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Starting Price(USD)</th>
-                                    <th scope="col">Bid Price (USD)</th>
-                                    <th scope="col">Bid Date</th>
-                                    <th scope="col">Auction Start Date</th>
-                                    <th scope="col">Auction End Date</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-        
-                            <tbody id="bidding-list">
-                                <% if (bidHistory.length > 0) { %>
-                                    <% bidHistory.forEach(history => { %>
-                                        <tr>
-                                            <th scope='row' class='text-center'><img src='upload/<%= history.itemImage %>' width='100%'></th>
-                                            <td><%= history.itemName %></td>
-                                            <td>$ <%= history.startingPrice %></td>                                           
-                                            <td>$ <%= history.bidPrice %></td>
-                                            <td><%= history.bidTime %></td>
-                                            <td><%= history.startDate %></td>
-                                            <td><%= history.endDate %></td>
-                                            <td><a href='product-info?item=<%= history.itemID %>' class='btn btn-primary mt-1'><i class="fas fa-eye"></i> View</a></td>
-                                        </tr>
-                                    <% }) %>
-                                <% } else { %>
-                                    <div class="mt-3 mb-3 text-danger font-weight-bold">
-                                        You have not bid any items yet...
-                                    </div>
-                                <% } %>
-                            </tbody>
-                        </table>
-
-                        <script>
-                            $(document).ready( function () {
-                                //Create new Datatable
-                                $('#bidding-history-table').DataTable();
-
-                            } );
-                        </script>
-                    </div>
-
-                  </div>
 
                 </div>
-              </div>
+            </div>
         </div>
         
     </div>

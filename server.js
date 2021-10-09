@@ -75,6 +75,7 @@ var auctioneerController = require('./controllers/auctioneerController');
 var itemController = require('./controllers/itemController');
 var checkoutController = require('./controllers/checkoutController');
 var errorController = require('./controllers/errorController');
+var shoppingCartController = require('./controllers/shoppingCartController');
 
 app.get("/", homeController.home_page);
 
@@ -107,6 +108,8 @@ app.get("/checkout", checkoutController.checkout_page);
 app.get("/thankyou", checkoutController.thankyou_page);
 
 app.get("/auctionResults", homeController.search_page);
+
+app.get("/shopping-cart", shoppingCartController.shopping_cart_page);
 
 app.get("/logout", loginController.logout);
 
