@@ -185,34 +185,69 @@
                                     <div class="text-danger mt-3" id="payment-deleted" style="display: none;">
                                         Payment deleted successful!
                                     </div>
-                                  </ul>
+                                </ul>
                             </div>
                         </div>
                     </div>
 
-                   
 
                     <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                        <div class="payment-method-title mb-3">
+                            <h2>Auctioned Records</h2>
+                        </div>
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="auction-alert" style="display: none;">
+                            Item is successfully deleted!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
                         <table class="table table-bordered" id="bidding-history-table">
                             <thead>
-                              <tr class="bg-light">
-                                <th scope="col">Product</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Sold Price(RM)</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Payment Method</th>
-                                <th scope="col">Payment Date</th>
-                                <th scope="col">Action</th>
-                              </tr>
+                                <tr class="bg-light">
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Starting Price (USD)</th>
+                                    <th scope="col">Auction Status</th>
+                                    <th scope="col">Sold Price (USD)</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Payment Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
                             </thead>
         
                             <tbody id="bidding-list">
-
+                                <% if (auctionedData.length > 0) { %>
+                                    <% auctionedData.forEach(item => { %>
+                                        <tr>
+                                            <th scope='row' class='text-center'><img src='upload/<%= item.itemImage %>' width='100%'></th>
+                                            <td><%= item.itemName %></td>
+                                            <td>$ <%= item.startingPrice %></td>                                           
+                                            <td><%= item.auctionStatus %></td>
+                                            <td>$ <%= item.soldPrice %></td>
+                                            <td><%= item.paymentMethod %></td>
+                                            <td><%= item.paymentDate %></td>
+                                            <td class='text-center'>
+                                                <a href='product-info?item=<%= item.itemID %>' class='btn btn-primary mt-1'><i class="fas fa-eye"></i> View</a>
+                                                <button onclick="confirmDeleteItem('<%= item.itemID %>')" class='btn btn-danger mt-1'><i class="fas fa-trash"></i> Delete</button>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                        You do not have any auctioned item yet...
+                                    </div>
+                                <% } %>
                             </tbody>
                         </table>
 
                         <script>
-                            sampleAuctioneerPastRecord()
+                            $(document).ready( function () {
+                                //Create new Datatable
+                                $('#bidding-history-table').DataTable();
+
+                            } );
                         </script>
                     </div>
 
@@ -220,6 +255,13 @@
                         <div class="auction-form-container">
                             <div class="auction-form-title text-center mb-3 mt-3">
                                 <h2>Auction Your Item</h2>
+                            </div>
+
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" id="item-alert" style="display: none;">
+                                Item is successfully posted !
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
 
                             <form method="POST" action="/post-item" enctype="multipart/form-data" onsubmit="return postItemVerification()">
@@ -389,4 +431,34 @@ profileChanges();
 $('.popover-dismiss').popover({
     trigger: 'focus'
 })
+
+function confirmDeleteItem(item_id){
+    var confirmDelete = confirm("Are you sure you want to delete this item? It is irreversible!");
+
+    if(confirmDelete){
+        window.location.href = "delete-item/" + item_id;
+    }
+
+}
+
+function AuctionnerProfileAlert(){
+    var link = window.location.href.split("?")[1];
+    var item_alert = document.getElementById("item-alert");
+    var auction_alert = document.getElementById("auction-alert");
+
+    if(link === "item-posted"){
+        item_alert.style.display = "";
+
+        //Switch to item tab
+        document.getElementById("list-post-auction").click();
+    }
+    else if(link === "item-deleted"){
+        auction_alert.style.display = "";
+
+        //Switch to auctioned item tab
+        document.getElementById("list-profile-list").click();
+    }
+}
+
+AuctionnerProfileAlert();
 </script>

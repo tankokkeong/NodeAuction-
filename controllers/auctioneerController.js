@@ -1,14 +1,31 @@
-exports.auctionner_profile_page = function(req, res){
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
-        var user_record = req.session.userID;
+const admin = require('firebase-admin');
+const firestore = admin.firestore();
 
-        if(account_type == "seller"){
-            res.render('auctioneer-profile', {authenticated: true, accountType : account_type, userRecord: user_record});
-        }
-        else{
-            res.redirect("/");
-        }
+exports.auctionner_profile_page = function(req, res){
+
+    if(req.session.userID){
+        var auctioned_data = [];
+        const auctionedItemRef = firestore.collection('auctionedItem');
+
+        auctionedItemRef.where("postedBy", "==", req.session.userID.userID).get().then((queruSnapshot)=>{
+            queruSnapshot.forEach((doc)=>{
+                auctioned_data.push(doc.data());
+            });
+
+            console.log(auctioned_data)
+
+            var account_type = req.session.userID.accountType;
+            var user_record = req.session.userID;
+
+            if(account_type == "seller"){
+                res.render('auctioneer-profile', {authenticated: true, accountType : account_type, userRecord: user_record, auctionedData: auctioned_data});
+            }
+            else{
+                res.redirect("/");
+            }
+        });
+
+        
         
     }
     else{
@@ -17,9 +34,6 @@ exports.auctionner_profile_page = function(req, res){
 }
 
 exports.edit_auctioneer = function(req, res){
-
-    const admin = require('firebase-admin');
-    const firestore = admin.firestore();
     
     if(req.session.userID){
 

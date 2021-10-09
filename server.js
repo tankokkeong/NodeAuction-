@@ -96,6 +96,8 @@ app.post("/edit-auctioneer", auctioneerController.edit_auctioneer);
 
 app.post("/post-item", upload.single('file_upload'), itemController.post_item);
 
+app.get("/delete-item/:id", itemController.delete_item);
+
 app.get("/product-info", itemController.product_info_page);
 
 app.post("/submitBid/:id", itemController.submit_bid);

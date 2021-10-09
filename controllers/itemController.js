@@ -98,6 +98,7 @@ exports.post_item = function(req, res){
         start_date = start_date[0] + ", " + start_date[1];
         end_date = end_date[0] + ", " + end_date[1];
 
+        const auctionedItemRef = firestore.collection('auctionedItem');
 
         firestore.collection('items').add({
             itemImage: item_image,
@@ -113,8 +114,26 @@ exports.post_item = function(req, res){
             postedBy: posted_by,
             winner: "",
             keywords : item_keywords
-        }).then(()=>{
-            res.redirect("/auctioneer-profile");
+        }).then((docRef)=>{
+
+            //Add record to auctionedItem ref
+            auctionedItemRef.add({
+                itemID: docRef.id,
+                itemImage: item_image,
+                itemName : item_name,
+                soldPrice: "-",
+                paymentStatus: "-",
+                paymentMethod: "-",
+                paymentDate: "-",
+                auctionStatus: "Ongoing",
+                startingPrice: item_starting_price,
+                startingDate : start_date,
+                endDate : end_date,
+                postedBy: posted_by
+            }).then(()=>{
+                res.redirect("/auctioneer-profile?item-posted");
+            })
+            
         });
     }
     else{
@@ -182,6 +201,68 @@ exports.submit_bid = function(req, res){
             res.redirect('/');
         }
         
+
+    }
+    else{
+        res.redirect('/');
+    }
+}
+
+exports.delete_item = function (req, res){
+
+    if(req.session.userID){ 
+        const fs = require('fs');
+        const path = require('path');
+
+        //Get item id
+        const itemID = req.params.id;
+        const auctionedItemRef = firestore.collection('auctionedItem');
+        const itemRef = firestore.collection('items').doc(itemID);
+        const bidListRef = firestore.collection('bidList').doc(itemID);
+
+        if(itemID.trim().length !== 0){
+
+            //Get the auction item reference first
+            auctionedItemRef.where("itemID", "==", itemID).get().then((querySnapshot)=>{
+
+                var auction_item_id = "";
+                var image_name = "";
+
+                querySnapshot.forEach((doc)=>{
+                    auction_item_id = doc.id;
+                    image_name = doc.data().itemImage;
+                });
+
+                if(auction_item_id.trim().length !== 0){
+
+                    //Delete Auction Item ref
+                    auctionedItemRef.doc(auction_item_id).delete().then(()=>{
+
+                        //Delete item ref
+                        itemRef.delete().then(()=>{
+
+                            //Delete bidding list reference
+                            bidListRef.delete().then(()=>{
+
+                                // delete item's image
+                                fs.unlink(path.join(__dirname, "..", "upload", image_name), function (err) {
+                                    if (err) throw err;
+                                    // if no error, file has been deleted successfully
+                                    console.log('File deleted!');
+
+                                    //Redirect back to the auctioneer profile
+                                    res.redirect('/auctioneer-profile?item-deleted');
+                                });
+                            })
+                        });
+                    });
+                }
+                else{
+                    res.redirect('/?invalid-delete');
+                }
+            });
+            
+        }
 
     }
     else{
