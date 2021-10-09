@@ -187,26 +187,52 @@
                    
 
                     <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                        <div class="payment-method-title mb-3">
+                            <h2>Bid Records</h2>
+                        </div>
+
                         <table class="table table-bordered" id="bidding-history-table">
                             <thead>
-                              <tr class="bg-light">
-                                <th scope="col">Product</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price(RM)</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Payment Method</th>
-                                <th scope="col">Payment Date</th>
-                                <th scope="col">Action</th>
-                              </tr>
+                                <tr class="bg-light">
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Starting Price(USD)</th>
+                                    <th scope="col">Bid Price (USD)</th>
+                                    <th scope="col">Bid Date</th>
+                                    <th scope="col">Auction Start Date</th>
+                                    <th scope="col">Auction End Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
                             </thead>
         
                             <tbody id="bidding-list">
-
+                                <% if (bidHistory.length > 0) { %>
+                                    <% bidHistory.forEach(history => { %>
+                                        <tr>
+                                            <th scope='row' class='text-center'><img src='upload/<%= history.itemImage %>' width='100%'></th>
+                                            <td><%= history.itemName %></td>
+                                            <td>$ <%= history.startingPrice %></td>                                           
+                                            <td>$ <%= history.bidPrice %></td>
+                                            <td><%= history.bidTime %></td>
+                                            <td><%= history.startDate %></td>
+                                            <td><%= history.endDate %></td>
+                                            <td><a href='product-info?item=<%= history.itemID %>' class='btn btn-primary mt-1'><i class="fas fa-eye"></i> View</a></td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                        You have not bid any items yet...
+                                    </div>
+                                <% } %>
                             </tbody>
                         </table>
 
                         <script>
-                            sampleBidderPastRecord();
+                            $(document).ready( function () {
+                                //Create new Datatable
+                                $('#bidding-history-table').DataTable();
+
+                            } );
                         </script>
                     </div>
 

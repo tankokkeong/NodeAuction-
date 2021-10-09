@@ -12,8 +12,6 @@ exports.auctionner_profile_page = function(req, res){
                 auctioned_data.push(doc.data());
             });
 
-            console.log(auctioned_data)
-
             var account_type = req.session.userID.accountType;
             var user_record = req.session.userID;
 

@@ -151,9 +151,9 @@ exports.submit_bid = function(req, res){
 
         //Check number
         if(!isNaN(bidPrice)){
-            const bidListRef = firestore.collection('bidList').doc(id).collection(id);
 
             if(req.session.userID){
+                const bidListRef = firestore.collection('bidList').doc(id).collection(id);
                 var account_type = req.session.userID.accountType;
 
                 //Check if is bidder
@@ -185,7 +185,33 @@ exports.submit_bid = function(req, res){
                         BidTime : bid_time,
                         BidBy: bid_by
                     }).then(()=>{
-                        res.redirect('/product-info?item=' + id);
+
+                        const itemRef = firestore.collection('items').doc(id);
+                        const bidderHistory = firestore.collection('bidderHistory').doc(bid_by).collection(bid_by);
+
+                        itemRef.get().then((doc)=>{
+
+                            if(doc.exists){
+                                //Add the data to BidderHistory
+                                bidderHistory.add({
+                                    itemID: id,
+                                    itemImage: doc.data().itemImage,
+                                    itemName: doc.data().itemName,
+                                    startingPrice: doc.data().itemStartingPrice,
+                                    startDate: doc.data().startingDate,
+                                    endDate: doc.data().endDate,
+                                    bidPrice : bidPrice,
+                                    bidTime : bid_time,
+                                }).then(()=>{
+                                    res.redirect('/product-info?item=' + id);
+                                });
+                            }
+                            else{
+                                res.redirect('/product-info?item=' + id);
+                            }
+
+                        });
+                        
                     });
                 }
                 else{

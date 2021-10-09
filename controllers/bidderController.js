@@ -1,11 +1,29 @@
+const admin = require('firebase-admin');
+const firestore = admin.firestore();
+
 exports.bidder_profile_page = function(req, res){
 
     if(req.session.userID){
+
         var account_type = req.session.userID.accountType;
         var user_record = req.session.userID;
+        const user_id = req.session.userID.userID;
 
         if(account_type == "bidder"){
-            res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record});
+            const bidderHistory = firestore.collection('bidderHistory').doc(user_id).collection(user_id);
+            var bid_history = [];
+
+            bidderHistory.orderBy("bidTime", "desc").get().then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+
+                    //Push the data object into array
+                    bid_history.push(doc.data());
+                });
+
+                console.log(bid_history)
+                res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record, bidHistory: bid_history});
+            });
+            
         }
         else{
             res.redirect("/");
@@ -18,9 +36,6 @@ exports.bidder_profile_page = function(req, res){
 }
 
 exports.edit_bidder = function(req, res){
-    
-    const admin = require('firebase-admin');
-    const firestore = admin.firestore();
 
     if(req.session.userID){
 
