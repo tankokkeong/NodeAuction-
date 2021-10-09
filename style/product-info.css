@@ -44,16 +44,26 @@
 }
 
 .coutdown-row{
-    display:flex;
+    width: 100%;
 }
 
 .coutdown-col{
-    background-color:black;
     color:white;
-    margin-left: 15px;
-    width:120px;
-    border-radius:15px;
+    width:100%;
+    max-width: 160px;
+    padding: 0 10px;;
+}
+
+.count-down-container{
     padding: 10px;
+    background-color:black;
+    border-radius:15px;
+}
+
+.bidding-history-table-container{
+    overflow-x: hidden;
+    padding: 15px;
+    overflow: auto;
 }
 
 @media(min-width:850px){

@@ -44,29 +44,31 @@
                         <span>End Date: <strong><%= itemRecord.endDate %></strong></span><br>
                         <span>Time Left: 
                             <strong id="count-down-display">
-                                <div class="coutdown-row mt-3">
-                                    <div class="coutdown-col">
-                                        <div class="text-center">
+                                <div class="coutdown-row row mt-3">
+
+                                    <div class="coutdown-col col-6 col-lg-3 mt-3">
+                                        <div class="text-center count-down-container">
                                             <div class="count-down-time">-</div>
                                             <div>Days</div>
                                         </div>
                                     </div>
-                                    <div class="coutdown-col">
-                                        <div class="text-center">
+
+                                    <div class="coutdown-col col-6 col-lg-3 mt-3">
+                                        <div class="text-center count-down-container">
                                             <div class="count-down-time">-</div>
                                             <div>Hours</div>
                                         </div>
                                     </div>
                                     
-                                    <div class="coutdown-col">
-                                        <div class="text-center">
+                                    <div class="coutdown-col col-6 col-lg-3 mt-3">
+                                        <div class="text-center count-down-container">
                                             <div class="count-down-time">-</div>
                                             <div>Minutes</div>
                                         </div>
                                     </div>
                                     
-                                    <div class="coutdown-col">
-                                        <div class="text-center">
+                                    <div class="coutdown-col col-6 col-lg-3 mt-3">
+                                        <div class="text-center count-down-container">
                                             <div class="count-down-time">-</div>
                                             <div>Seconds</div>
                                         </div>
@@ -133,42 +135,44 @@
                 <!-- Outbid audio -->
                 <audio src="audio/outbid_effect.mp3" id="outbid-audio"></audio>
 
-                <table class="table table-bordered" id="bidding-history-table">
-                    <thead>
-                      <tr class="bg-light">
-                        <th scope="col" style="width: 25%;">Rank</th>
-                        <th scope="col" style="width: 25%;">Bidder</th>
-                        <th scope="col" style="width: 25%;">Bid Amount</th>
-                        <th scope="col" style="width: 25%;">Bid Time</th>
-                      </tr>
-                    </thead>
-
-                    <tbody id="bidding-list">
-                        <% if (biddingList.length > 0) { %>
-                            <% var bidding_count = 0; %>
-                            <% biddingList.forEach(bidding => { bidding_count++ %>
-                                <tr>
-                                    <th scope='row'> <%= bidding_count %></th>
-                                    <td><%= bidding.BidderName %></td>
-                                    <td>$ <%= bidding.BidPrice %></td>
-                                    <td><%= bidding.BidTime %></td>
-                                </tr>
-                            <% }) %>
-
-                            <script>
-                                //Display table
-                                initializeDataTable();
-                            </script>
-                        <% } else { %>
-                            <tr>
-                                <th scope='row' colspan='4'> No bid history now</th>
-                                <td style='display:none;'></td>
-                                <td style='display:none;'></td>
-                                <td style='display:none;'></td>
+                <div class="bidding-history-table-container">
+                    <table class="table table-bordered" id="bidding-history-table">
+                        <thead>
+                            <tr class="bg-light">
+                                <th scope="col" style="width: 25%;">Rank</th>
+                                <th scope="col" style="width: 25%;">Bidder</th>
+                                <th scope="col" style="width: 25%;">Bid Amount</th>
+                                <th scope="col" style="width: 25%;">Bid Time</th>
                             </tr>
-                        <% } %>
-                    </tbody>
-                  </table>
+                        </thead>
+    
+                        <tbody id="bidding-list">
+                            <% if (biddingList.length > 0) { %>
+                                <% var bidding_count = 0; %>
+                                <% biddingList.forEach(bidding => { bidding_count++ %>
+                                    <tr>
+                                        <th scope='row'> <%= bidding_count %></th>
+                                        <td><%= bidding.BidderName %></td>
+                                        <td>$ <%= bidding.BidPrice %></td>
+                                        <td><%= bidding.BidTime %></td>
+                                    </tr>
+                                <% }) %>
+    
+                                <script>
+                                    //Display table
+                                    initializeDataTable();
+                                </script>
+                            <% } else { %>
+                                <tr>
+                                    <th scope='row' colspan='4'> No bid history now</th>
+                                    <td style='display:none;'></td>
+                                    <td style='display:none;'></td>
+                                    <td style='display:none;'></td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>  
 
             <div class="product-description">
