@@ -106,35 +106,36 @@
 
                 <div class="col-lg-3 checkout-col">
                     <div class="cart-title mt-2 mb-3">
-                        <h2>Your Cart</h2>
+                        <h2>Cart Item(5)</h2>
                     </div>
 
                     <div class="cart-container">
-                        <div class="cart-media">
-                            <div class="row">
-                                <div class="col-4 media">
-                                    <img src="images/apple-macbook-air-13-m1-8gb-256gb-ssd-laptop-min.jpg" class="align-self-center" width="100%">
+                        <% if (cartItem.length > 0) { %>
+                            <% cartItem.forEach(item => { %>
+                                <div class="cart-media">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-lg-6 col-xl-3 cart-col">
+                                            <div class="text-center">
+                                                <img src="upload/<%= item.itemImage %>" class="cart-img align-self-center" width="100%">
+                                            </div>
+                                        </div>
+        
+                                        <div class="col-sm-6 col-lg-6 col-xl-6 cart-col">
+                                            <span class="mt-3"><%= item.itemName %></span>
+                                            <p>Price: <span class="text-success"><%= item.soldPrice %></span></p>
+                                        </div>
+        
+                                        <div class="col-sm-3 col-lg-12 col-xl-3 cart-col text-center">
+                                            <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div> 
                                 </div>
-                                
-                                <div class="col-8">
-                                  <h5 class="mt-3">Apple Macbook Air 13 M1 8GB 256GB SSD Laptop</h5>
-                                    <p>Price: <span class="text-success">$1050</span></p>
-                                </div>
-                            </div> 
-                        </div>
-
-                        <div class="cart-media mt-1">
-                            <div class="row">
-                                <div class="col-4 media">
-                                    <img src="images/apple-macbook-air-13-m1-8gb-256gb-ssd-laptop-min.jpg" class="align-self-center" width="100%">
-                                </div>
-                                
-                                <div class="col-8">
-                                  <h5 class="mt-3">Apple Macbook Air 13 M1 8GB 256GB SSD Laptop</h5>
-                                    <p>Price: <span class="text-success">$1050</span></p>
-                                </div>
-                            </div> 
-                        </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                Your cart is empty now...
+                            </div>
+                        <% } %>
                     </div>
 
                     <div class="total-container mt-3">

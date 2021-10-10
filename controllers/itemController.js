@@ -313,6 +313,7 @@ function updateAuctionWinner(itemId){
             if (doc.exists) {
                 //Get the users ID
                 var bid_by = doc.data().BidBy;
+                var sold_price = doc.data().BidPrice
     
                 itemRef.get().then((item_doc) => {
     
@@ -330,6 +331,8 @@ function updateAuctionWinner(itemId){
                         itemObject.endDate = item_doc.data().endDate;
                         itemObject.postedBy = item_doc.data().postedBy;
                         itemObject.winner= bid_by;
+                        itemObject.soldPrice = sold_price;
+                        itemObject.created = firebase.firestore.Timestamp.fromDate(new Date());
     
                         //Set the winner of the auction
                         itemRef.set(
@@ -337,9 +340,9 @@ function updateAuctionWinner(itemId){
                         ).then(()=>{
                             
                             //Add the item to the winner's shopping cart
-                            const shoppingCartRef = firestore.collection('shoppingCart').doc(bid_by).collection(itemId);
+                            const shoppingCartRef = firestore.collection('shoppingCart').doc(bid_by).collection(bid_by).doc(itemId);
     
-                            shoppingCartRef.add(itemObject)
+                            shoppingCartRef.set(itemObject)
                         });
                     }
                     else{

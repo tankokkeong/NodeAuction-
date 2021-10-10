@@ -17,10 +17,26 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
+.cart-container{
+    height: 450px;
+    overflow: auto;
+    overflow-y: scroll;
+}
+
+.cart-container::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
 .cart-media{
     border: 1px solid black;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    padding: 5px;
+    padding: 15px;
+}
+
+.cart-img{
+    max-height: 100px;
+    max-width: 100px;
+    height: 100%;
 }
 
 .total-display{

@@ -68,7 +68,7 @@ exports.search_page = function(req, res){
 
                 item_object.itemID = doc.id;
                 item_object.itemName = doc.data().itemName;
-                item_object.startingPrice = doc.data().startingPrice;
+                item_object.startingPrice = doc.data().itemStartingPrice;
                 item_object.startingDate = doc.data().startingDate;
                 item_object.endDate = doc.data().endDate;
                 item_object.itemImage = doc.data().itemImage;
