@@ -2,6 +2,7 @@
 
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
+const firebase = require('firebase-admin')
 var stripJs = require('strip-js');
 var fileHelper = require('../server');
 var helper = require('../helper');
@@ -113,7 +114,8 @@ exports.post_item = function(req, res){
             endDate : end_date,
             postedBy: posted_by,
             winner: "",
-            keywords : item_keywords
+            keywords : item_keywords,
+            created: firebase.firestore.Timestamp.fromDate(new Date())
         }).then((docRef)=>{
 
             //Add record to auctionedItem ref
@@ -129,7 +131,8 @@ exports.post_item = function(req, res){
                 startingPrice: item_starting_price,
                 startingDate : start_date,
                 endDate : end_date,
-                postedBy: posted_by
+                postedBy: posted_by,
+                created: firebase.firestore.Timestamp.fromDate(new Date())
             }).then(()=>{
                 res.redirect("/auctioneer-profile?item-posted");
             })
@@ -202,6 +205,7 @@ exports.submit_bid = function(req, res){
                                     endDate: doc.data().endDate,
                                     bidPrice : bidPrice,
                                     bidTime : bid_time,
+                                    created: firebase.firestore.Timestamp.fromDate(new Date())
                                 }).then(()=>{
                                     res.redirect('/product-info?item=' + id);
                                 });

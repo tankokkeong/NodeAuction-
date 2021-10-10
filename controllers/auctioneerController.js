@@ -7,7 +7,7 @@ exports.auctionner_profile_page = function(req, res){
         var auctioned_data = [];
         const auctionedItemRef = firestore.collection('auctionedItem');
 
-        auctionedItemRef.where("postedBy", "==", req.session.userID.userID).get().then((queruSnapshot)=>{
+        auctionedItemRef.where("postedBy", "==", req.session.userID.userID).where("created", "!=", "").orderBy("created", "desc").get().then((queruSnapshot)=>{
             queruSnapshot.forEach((doc)=>{
                 auctioned_data.push(doc.data());
             });

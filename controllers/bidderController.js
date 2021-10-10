@@ -13,14 +13,13 @@ exports.bidder_profile_page = function(req, res){
             const bidderHistory = firestore.collection('bidderHistory').doc(user_id).collection(user_id);
             var bid_history = [];
 
-            bidderHistory.orderBy("bidTime", "desc").get().then((querySnapshot)=>{
+            bidderHistory.orderBy("created", "desc").get().then((querySnapshot)=>{
                 querySnapshot.forEach((doc)=>{
 
                     //Push the data object into array
                     bid_history.push(doc.data());
                 });
 
-                console.log(bid_history)
                 res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record, bidHistory: bid_history});
             });
             
