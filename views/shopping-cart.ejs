@@ -117,13 +117,17 @@
 
                             <% 
                                 var item_count = 0; 
-                            
+                                var subtotal = 0;
+                                var shipping = 0;
                             %>
 
                             <% cartItem.forEach(item => { %>
 
-                                <%  item_count++; %>
-
+                                <%  
+                                    item_count++;
+                                    subtotal = subtotal + parseFloat(item.soldPrice); 
+                                    shipping = shipping + parseFloat(item.shippingFees);
+                                %>
                                 <div class="cart-media mt-2">
                                     <div class="row">
                                         <div class="col-sm-3 col-lg-6 col-xl-3 cart-col">
@@ -168,15 +172,15 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row">Subtotal: </th>
-                                        <td class="text-right text-success font-weight-bold">$2100</td>
+                                        <td class="text-right text-success font-weight-bold">$ <%=subtotal %></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Shipping: </th>
-                                        <td class="text-right text-success font-weight-bold">$15</td>
+                                        <td class="text-right text-success font-weight-bold">$ <%=shipping %></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Total: </th>
-                                        <td class="text-right text-success font-weight-bold">$2115</td>
+                                        <td class="text-right text-success font-weight-bold">$ <%=subtotal+shipping %></td>
                                     </tr>
                                 </tbody>
                             </table>
