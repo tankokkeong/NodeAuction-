@@ -18,7 +18,8 @@
 }
 
 .cart-container{
-    height: 450px;
+    max-height: 450px;
+    height: auto;
     overflow: auto;
     overflow-y: scroll;
 }

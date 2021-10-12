@@ -2,7 +2,7 @@
 
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
-const firebase = require('firebase-admin')
+const firebase = require('firebase-admin');
 var stripJs = require('strip-js');
 var fileHelper = require('../server');
 var helper = require('../helper');

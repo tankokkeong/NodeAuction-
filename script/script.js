@@ -290,7 +290,14 @@ function login()
                 body: JSON.stringify({uid: user.user.uid}),
             })
             .then((response) => {
-                window.location.href = "home";
+                
+                if(response.statusText === "account suspended"){
+                    firebase.auth().signOut();
+                    window.location.href = "login?account-suspended";
+                }
+                else{
+                    window.location.href = "home";
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -555,5 +562,4 @@ function dashboardSearch() {
 
         window.location.href = "auctionResults?item=" + search_input;
     }
-    
 }

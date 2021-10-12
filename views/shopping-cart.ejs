@@ -14,6 +14,9 @@
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="script/cart.js"></script>
 </head>
 <body>
     <%- include("./common/header.ejs") %>
@@ -105,14 +108,23 @@
                 </div>
 
                 <div class="col-lg-3 checkout-col">
-                    <div class="cart-title mt-2 mb-3">
-                        <h2>Cart Item(5)</h2>
+                    <div class="cart-title mt-3 mb-3">
+                        <h2>Cart Item(<%= cartItem.length %>)</h2>
                     </div>
 
                     <div class="cart-container">
                         <% if (cartItem.length > 0) { %>
+
+                            <% 
+                                var item_count = 0; 
+                            
+                            %>
+
                             <% cartItem.forEach(item => { %>
-                                <div class="cart-media">
+
+                                <%  item_count++; %>
+
+                                <div class="cart-media mt-2">
                                     <div class="row">
                                         <div class="col-sm-3 col-lg-6 col-xl-3 cart-col">
                                             <div class="text-center">
@@ -122,11 +134,21 @@
         
                                         <div class="col-sm-6 col-lg-6 col-xl-6 cart-col">
                                             <span class="mt-3"><%= item.itemName %></span>
-                                            <p>Price: <span class="text-success"><%= item.soldPrice %></span></p>
+                                            <p>Deal Price: <span class="text-success"><%= item.soldPrice %></span></p>                             
                                         </div>
         
                                         <div class="col-sm-3 col-lg-12 col-xl-3 cart-col text-center">
-                                            <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                            <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" onclick="cartProductRemoval('<%= item.cartID %>')"><i class="fas fa-trash"></i></button>
+                                        </div>
+
+                                        <div class="col-12 mt-2">
+                                            <p>Time Left: 
+                                                <span class="text-primary" id="item-countdown-display-<%= item_count; %>"></span>
+
+                                                <script>
+                                                    checkoutTimeLeft('<%= item.endDate %>', 'item-countdown-display-<%= item_count; %>');
+                                                </script>
+                                            </p> 
                                         </div>
                                     </div> 
                                 </div>
@@ -144,20 +166,20 @@
                         <div class="total-display">
                             <table class="table table-borderless">
                                 <tbody>
-                                  <tr>
-                                    <th scope="row">Subtotal: </th>
-                                    <td class="text-right text-success font-weight-bold">$2100</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Shipping: </th>
-                                    <td class="text-right text-success font-weight-bold">$15</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Total: </th>
-                                    <td class="text-right text-success font-weight-bold">$2115</td>
-                                  </tr>
+                                    <tr>
+                                        <th scope="row">Subtotal: </th>
+                                        <td class="text-right text-success font-weight-bold">$2100</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Shipping: </th>
+                                        <td class="text-right text-success font-weight-bold">$15</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Total: </th>
+                                        <td class="text-right text-success font-weight-bold">$2115</td>
+                                    </tr>
                                 </tbody>
-                              </table>
+                            </table>
                         </div>
                     </div>
 
@@ -174,244 +196,34 @@
 </body>
 </html>
 
+<!-- Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product Removal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        Too many product cancellations can lead to account suspension, are you sure you want to remove this product from the cart?
+    </div>
+
+    <div class="modal-footer">
+        <form action="/cart-remove" method="POST">
+            <input type="hidden" id="cart-id-input" name="cart_id">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-primary">Sure</button>
+        </form>
+
+    </div>
+    </div>
+</div>
+</div>
+
 <script>
     //Check Sign In
     checkSignIn();
-</script>
-
-<script> 
-
-    var card_payment = true;
-    var card_payment_open = false;
-    var online_payment = true;
-    var online_payment_open = false;
-
-    $(document).ready(function(){
-
-        $("#pay-with-card-trigger").click(function(){
-            if(card_payment == true){
-                
-                $("#pay-with-card-form").slideToggle("slow");
-
-                if(card_payment_open == false){
-                    card_payment_open = true;
-                    online_payment = false;
-
-                    //Disable online payment trigger
-                    $("#pay-with-online-trigger").css("opacity", "0.5");
-                    $("#pay-with-online-trigger").css("cursor", "not-allowed");
-                }
-                else{
-                    card_payment_open = false;
-                    online_payment = true;
-
-                    //Enable online payment trigger
-                    $("#pay-with-online-trigger").css("opacity", "1");
-                    $("#pay-with-online-trigger").css("cursor", "pointer");
-                }
-            }
-
-        });
-
-        $("#pay-with-online-trigger").click(function(){
-
-            if(online_payment == true)
-            {
-                $("#pay-with-online-form").slideToggle("slow");
-
-                if(online_payment_open == false){
-                    online_payment_open = true;
-                    card_payment = false;
-
-                    //Disable card payment trigger
-                    $("#pay-with-card-trigger").css("opacity", "0.5");
-                    $("#pay-with-card-trigger").css("cursor", "not-allowed");
-
-                }
-                else{
-                    online_payment_open = false;
-                    card_payment = true;
-
-                    //Enable card payment trigger
-                    $("#pay-with-card-trigger").css("opacity", "1");
-                    $("#pay-with-card-trigger").css("cursor", "pointer");
-                }
-            }
-            
-        });
-
-        $("#checkout-btn").click(function(){
-
-            var checkout_warning = document.getElementById("checkout-warning");
-
-            if(card_payment == true && card_payment_open == true){
-                var card_visa = document.getElementById("card-visa");
-                var card_mastercard = document.getElementById("card-mastercard");
-                var card_maestro = document.getElementById("card-maestro");
-                var cardholder_name = document.getElementById("cardholder-name").value;
-                var cardNumber = document.getElementById("card-number").value;
-                var expiry_date = document.getElementById("expiry-date").value;
-                var cvv = document.getElementById("cvv").value; 
-                var error_count = 0;
-                var error_checkout = document.getElementsByClassName("error-checkout");
-                
-                if(cardholder_name == "" || cardNumber== "" || expiry_date == "" || cvv == ""){
-
-                    //Display the warning
-                    checkout_warning.style.display = "";
-                    checkout_warning.innerHTML = "Please fill in all your credit card details!";
-                    
-                    //Remove alert after 3 seconds
-                    setTimeout(function(){
-                        checkout_warning.style.display = "none";
-                    }, 3000);
-
-                    error_count++;
-                }
-                else if(card_visa.checked == false && card_mastercard.checked == false && card_maestro.checked == false){
-                    //Display the warning
-                    checkout_warning.style.display = "";
-                    checkout_warning.innerHTML = "Please fill in all your credit card details!";
-                    
-                    //Remove alert after 3 seconds
-                    setTimeout(function(){
-                        checkout_warning.style.display = "none";
-                    }, 3000);
-
-                    error_count++;
-                }
-
-                //Check card type format
-                if(card_visa.checked == false && card_mastercard.checked == false && card_maestro.checked == false){
-                    error_checkout[0].style.display = "";
-                    error_count++;
-                }
-                else
-                {
-                    error_checkout[0].style.display = "none";
-                }
-
-                //Check cardholder name format
-                if(cardholder_name.trim().length == 0){
-                    error_checkout[1].style.display = "";
-                    error_count++;
-                }
-                else
-                {
-                    error_checkout[1].style.display = "none";
-                }
-
-                //Check card number format
-                if(cardNumber.length != 19)
-                {
-                    error_checkout[2].style.display = "";
-                    error_count++;
-                }
-                else
-                {
-                    error_checkout[2].style.display = "none";
-                }
-
-                //Check expiry date format
-                if(expiry_date.length != 5){
-                    error_checkout[3].style.display = "";
-                    error_count++;
-                }
-                else
-                {
-                    error_checkout[3].style.display = "none";
-                }
-
-                //Check CVV format
-                if(cvv.length != 3){
-                    error_checkout[4].style.display = "";
-                    error_count++;
-                }
-                else
-                {
-                    error_checkout[4].style.display = "none";
-                }
-
-
-                if(error_count == 0)
-                {
-                    window.location.href = "thankyou.html";
-                }
-                
-            }
-            else if(online_payment == true && online_payment_open == true)
-            {
-                var direct_debit = document.getElementById("direct-debit");
-                var paypal = document.getElementById("paypal");
-                var checkout_warning = document.getElementById("checkout-warning");
-                var error_count = 0;
-
-                if(direct_debit.checked == false && paypal.checked == false){
-                    //Display the warning
-                    checkout_warning.style.display = "";
-                    checkout_warning.innerHTML = "Please select the online payment method!";
-                    
-                    //Remove alert after 3 seconds
-                    setTimeout(function(){
-                        checkout_warning.style.display = "none";
-                    }, 3000);
-
-                    error_count++;
-                }
-
-                if(error_count == 0)
-                {
-                    window.location.href = "thankyou.html";
-                }
-   
-            }
-            else if(card_payment_open == false && online_payment_open == false){
-                var checkout_warning = document.getElementById("checkout-warning");
-
-                //Display the warning
-                checkout_warning.style.display = "";
-                checkout_warning.innerHTML = "Please select your payment method!";
-                
-                //Remove alert after 3 seconds
-                setTimeout(function(){
-                    checkout_warning.style.display = "none";
-                }, 3000);
-            }
-
-        });
-    });
-
-    function creditCardFormatter(){
-        var cardNumber = document.getElementById("card-number").value;
-        var expiry_date = document.getElementById("expiry-date").value;
-        var key = event.keyCode || event.charCode;
-
-        // Format card numbers
-        if( key != 8 && key != 46 )
-        {
-            if(cardNumber.length < 18 && (cardNumber.length == 4 || cardNumber.length == 9 || cardNumber.length == 14)){
-                document.getElementById("card-number").value = document.getElementById("card-number").value + " ";
-            }
-        }
-
-        // For expiry date
-        if(expiry_date.length == 2){
-            document.getElementById("expiry-date").value = document.getElementById("expiry-date").value + "/";
-        }
-    }
-
-    function creditCardNameValidation(){
-        var characters_validation = /^[ A-Za-z]+$/;
-
-        if (!characters_validation.test(event.key)) {
-            event.preventDefault();
-        }
-    }
-
-    function creditCardNumberValidation(){
-        var digit_validation = /^[0-9]+$/;
-        if (!digit_validation.test(event.key)) {
-            event.preventDefault();
-        }
-    }
 </script>

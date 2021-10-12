@@ -111,6 +111,8 @@ app.get("/auctionResults", homeController.search_page);
 
 app.get("/shopping-cart", shoppingCartController.shopping_cart_page);
 
+app.post("/cart-remove", shoppingCartController.remove_cart_item);
+
 app.get("/logout", loginController.logout);
 
 app.get("/noscript", errorController.no_script_page);
