@@ -17,6 +17,9 @@
 
     <!-- JavaScript -->
     <script src="script/cart.js"></script>
+
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
     <%- include("./common/header.ejs") %>
@@ -25,149 +28,155 @@
         <div class="checkout-container">
             <div class="row">
                 <div class="col-lg-9 checkout-col">
-                    <div class="checkout-title mb-3 mt-2">
-                        <h1>Payment Details</h1>
+
+                    <div class="cart-container mt-3">
+                        <div class="cart-media">
+                            <div class="cart-title mb-3">
+                                <h4 class="font-weight-bold">Cart Item(<%= cartItem.length %>)</h4>
+                            </div>
+
+                            <% if (cartItem.length > 0) { %>
+
+                                <% 
+                                    var item_count = 0; 
+                                    var subtotal = 0;
+                                    var shipping = 0;
+                                %>
+    
+                                <% cartItem.forEach(item => { %>
+    
+                                    <%  
+                                        item_count++;
+                                        subtotal = subtotal + parseFloat(item.soldPrice); 
+                                        shipping = shipping + parseFloat(item.shippingFees);
+                                    %>
+                            <div class="row cart-row mt-3">
+                                <div class="col-sm-3 col-lg-6 col-xl-3 cart-col">
+                                    <div class="text-center">
+                                        <img src="upload/<%= item.itemImage %>" class="cart-img align-self-center" width="100%">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-6 col-xl-6 cart-col">
+                                    <span class="mt-3"><%= item.itemName %></span>
+                                    <p>Deal Price: <span class="text-success"><%= item.soldPrice %></span></p>      
+                                    <p>Time Left: 
+                                        <span class="text-primary" id="item-countdown-display-<%= item_count; %>"></span>
+
+                                        <script>
+                                            checkoutTimeLeft('<%= item.endDate %>', 'item-countdown-display-<%= item_count; %>');
+                                        </script>
+                                    </p>                        
+                                </div>
+
+                                <div class="col-sm-3 col-lg-12 col-xl-3 cart-col text-right">
+                                    <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" onclick="cartProductRemoval('<%= item.cartID %>')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div> 
+                            <% }) %>
+                            <% } else { %>
+                                <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                    Your cart is empty now...
+                                </div>
+                            <% } %>
+                        </div>
+
                     </div>
 
-                    <div class="bg-dark text-light pay-with-card-trigger text-center" id="pay-with-card-trigger">
-                        Pay With Cards <i class="far fa-credit-card"></i>
-                    </div>
+                    <div class="cart-container mt-3">
+                        <div class="cart-title mb-3">
+                            <h4 class="font-weight-bold">Delivery Details</h4>
+                        </div>
 
-                    <div class="pay-with-card-form" id="pay-with-card-form">
-                        <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Card Type:</label>
-                            <div class="col-sm-10">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="card-visa" value="option1">
-                                    <label class="form-check-label" for="inlineRadio1"><img src="images/visa-payment.png" class="payment-icon" alt=""></label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="card-mastercard" value="option2">
-                                    <label class="form-check-label" for="inlineRadio2"><img src="images/mastercard.png" class="payment-icon" alt=""></label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="card-maestro" value="option3">
-                                    <label class="form-check-label" for="inlineRadio3"><img src="images/maestro.png" class="payment-icon" alt=""></label>
-                                  </div>
-                                  <br>
-                                  <span class="text-danger error-checkout" style="display: none;">Card Type is required</span>
+                        <div class="delivery-form-container">
+                            <div class="form-group row">
+                                <label for="" class="col-sm-2">Delivery Address: </label>
+                                <div class="col-sm-10">
+                                    <div class="ml-3">
+                                        <input class="form-check-input" type="radio" name="exampleRadios" value="old address" checked onclick="newDeliveryAddress(false)">
+                                        <label class="form-check-label" for="">
+                                            Same as the address provided at my profile
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="ml-3">
+                                        <input class="form-check-input" type="radio" name="exampleRadios" value="new address" onclick="newDeliveryAddress(true)">
+                                        <label class="form-check-label" for="">
+                                            New address
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="shipping-address-container" style="display: none;" id="shipping-form">
+                                <div class="shipping-address-header mb-3">
+                                    <h5>New Shipping Address</h5>
+                                </div>
+
+                                <div class="shipping-address-form">
+
+                                    <div class="row mt-1">
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">First Name:</label>
+                                            <input type="text" class="form-control" placeholder="First Name">
+                                        </div>
+
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Last Name:</label>
+                                            <input type="text" class="form-control" placeholder="Last Name">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Address 1:</label>
+                                            <input type="text" class="form-control" placeholder="Address Line 1">
+                                        </div>
+
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Address 2:</label>
+                                            <input type="text" class="form-control" placeholder="Address Line 2">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Post Code:</label>
+                                            <input type="text" class="form-control" placeholder="Post Code">
+                                        </div>
+
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">City:</label>
+                                            <input type="text" class="form-control" placeholder="City">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Country:</label>
+                                            <select class="form-control" id="">
+                                                <option value="Malaysia">--Select your country--</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-6 mt-2">
+                                            <label for="">Phone Number:</label>
+                                            <input type="text" class="form-control" placeholder="Phone Number">
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="inputAddress">Cardholder Name:</label>
-                            <input type="text" class="form-control" id="cardholder-name" placeholder="John Doe" onkeydown="creditCardNameValidation()">
-                            <span class="text-danger error-checkout" style="display: none;">Card Name is required</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="inputAddress">Card Number:</label>
-                            <input type="text" class="form-control" id="card-number" placeholder="1234 1234 1234 1234" onkeydown="creditCardFormatter(); creditCardNumberValidation()" maxlength="19">
-                            <span class="text-danger error-checkout" style="display: none;">Card number must have 16 digits only!</span>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Expiry Date:</label>
-                                <input type="text" class="form-control" id="expiry-date" placeholder="MM/YY" maxlength="5" oninput="creditCardFormatter()" onkeydown="creditCardNumberValidation()">
-                                <span class="text-danger error-checkout" style="display: none;">Expiry Date must have 4 digits only!</span>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">CVV:</label>
-                                <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="3" onkeydown="creditCardNumberValidation()">
-                                <span class="text-danger error-checkout" style="display: none;">CVV must have 3 digits only!</span>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="bg-paypal text-light pay-with-card-trigger text-center mt-3" id="pay-with-online-trigger">
-                        Online Payment <i class="fab fa-cc-paypal"></i>
-                    </div>
-
-                    <div class="pay-with-online-form" id="pay-with-online-form">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="direct-debit" value="option1">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Online Banking & Direct Debit <img src="images/onlinebanking.png" alt="" class="payment-icon">
-                            </label>
-                          </div>
-
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="paypal" value="option1">
-                            <label class="form-check-label" for="exampleRadios1">
-                                Pay with PayPal <img src="images/paypal.png" alt="" class="payment-icon" id="paypal-icon"> 
-                            </label>
-                          </div>
-                    </div>
-
-                    <div class="checkout-alert text-center mt-3 text-danger" style="display: none;" id="checkout-warning">
-                        Please fill in the form!
                     </div>
                     
                 </div>
 
                 <div class="col-lg-3 checkout-col">
-                    <div class="cart-title mt-3 mb-3">
-                        <h2>Cart Item(<%= cartItem.length %>)</h2>
-                    </div>
-
-                    <div class="cart-container">
-                        <% if (cartItem.length > 0) { %>
-
-                            <% 
-                                var item_count = 0; 
-                                var subtotal = 0;
-                                var shipping = 0;
-                            %>
-
-                            <% cartItem.forEach(item => { %>
-
-                                <%  
-                                    item_count++;
-                                    subtotal = subtotal + parseFloat(item.soldPrice); 
-                                    shipping = shipping + parseFloat(item.shippingFees);
-                                %>
-                                <div class="cart-media mt-2">
-                                    <div class="row">
-                                        <div class="col-sm-3 col-lg-6 col-xl-3 cart-col">
-                                            <div class="text-center">
-                                                <img src="upload/<%= item.itemImage %>" class="cart-img align-self-center" width="100%">
-                                            </div>
-                                        </div>
-        
-                                        <div class="col-sm-6 col-lg-6 col-xl-6 cart-col">
-                                            <span class="mt-3"><%= item.itemName %></span>
-                                            <p>Deal Price: <span class="text-success"><%= item.soldPrice %></span></p>                             
-                                        </div>
-        
-                                        <div class="col-sm-3 col-lg-12 col-xl-3 cart-col text-center">
-                                            <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal" onclick="cartProductRemoval('<%= item.cartID %>')"><i class="fas fa-trash"></i></button>
-                                        </div>
-
-                                        <div class="col-12 mt-2">
-                                            <p>Time Left: 
-                                                <span class="text-primary" id="item-countdown-display-<%= item_count; %>"></span>
-
-                                                <script>
-                                                    checkoutTimeLeft('<%= item.endDate %>', 'item-countdown-display-<%= item_count; %>');
-                                                </script>
-                                            </p> 
-                                        </div>
-                                    </div> 
-                                </div>
-                            <% }) %>
-                        <% } else { %>
-                            <div class="mt-3 mb-3 text-danger font-weight-bold">
-                                Your cart is empty now...
-                            </div>
-                        <% } %>
-                    </div>
-
                     <div class="total-container mt-3">
-                        <h3>Summary</h3>
 
                         <div class="total-display">
+                            <h4>Summary</h4>
                             <table class="table table-borderless">
                                 <tbody>
                                     <tr>
@@ -184,12 +193,24 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <div class="mt-3">
+                                <form action="/create-checkout-session" method="POST" id="payment-form">
+                                    <button class="btn btn-primary"  style="width: 100%;" id="checkout-btn" type="submit">Check Out</button>
+                                </form>
+        
+                                <div class="text-left mt-3">
+                                    <span class="font-weight-bold">We Accept</span>
+
+                                    <div class="accept-img-container">
+                                        <img src="images/logo-senangpay-visamsfpx@2x.png" alt="" class="we-accept-img">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-3">
-                        <button class="btn btn-primary"  style="width: 100%;" id="checkout-btn">Check Out</button>
-                    </div>
+                    
                 </div>
             </div>
 

@@ -9,5 +9,18 @@ exports.checkout_page = function (req, res){
 }
 
 exports.thankyou_page = function (req, res){
-    res.render('checkout');
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        if(account_type === "bidder"){
+            res.render('thankyou');
+        }
+        else{
+            res.redirect("/");
+        }
+        
+
+    }else{
+        res.redirect("/");
+    }
 }

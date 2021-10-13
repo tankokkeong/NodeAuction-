@@ -13,15 +13,17 @@ html{
     min-width: 100vw;
     min-height: 100vh;
     height: 100%;
+    position: relative;
 }
 
 .payment-box{
-    width: 50%;
-    margin-left: 25%;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    width: 80%;
 }
 
-.redirect-message{
-    padding: 25px;
-    padding-top: 100px;
-    font-size: 50px;
+.redirect-text{
+    font-size: 20px;
 }
