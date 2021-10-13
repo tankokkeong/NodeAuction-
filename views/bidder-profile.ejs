@@ -245,6 +245,20 @@
                                 <h2>Payment Records</h2>
                             </div>
 
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="payment-cancel-alert" style="display: none;">
+                                Your payment is unsucessful! Please try again!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" id="payment-alert" style="display: none;">
+                                Your payment is successful, check you order now!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
                             <table class="table table-bordered" id="payment-history-table">
                                 <thead>
                                     <tr class="bg-light">
@@ -288,5 +302,25 @@
 </html>
 
 <script>
+    function bidderProfileAlert(){
+        var link = window.location.href.split("?")[1];
+        var payment_alert = document.getElementById("payment-alert");
+        var payment_cancel_alert = document.getElementById("payment-cancel-alert");
+
+        if(link === "payment-success"){
+            payment_alert.style.display = "";
+
+            //Switch to payment tab
+            document.getElementById("list-payment-list").click();
+        }
+        else if(link === "payment-cancelled"){
+            payment_cancel_alert.style.display = "";
+
+            //Switch to payment tab
+            document.getElementById("list-payment-list").click();
+        }
+    }
+
+    bidderProfileAlert();
     profileChanges();
 </script>

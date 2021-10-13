@@ -5,30 +5,28 @@ const stripe = require('stripe')('sk_test_51JjisWHuoCBZWlMWAiqpXcCadF2lToBkxX270
 
 exports.create_checkout_session = async function(req, res){
 
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: [
-            'card',
-            'fpx',
-            'grabpay',
-        ],
-        line_items: [
-            {
-            price_data: {
-                currency: 'myr',
-                product_data: {
-                name: 'Bidding Deal',
-                },
-                unit_amount: 2000,
-            },
-            quantity: 1,
-            },
-        ],
-        mode: 'payment',
-        success_url: 'http://localhost:3000/thankyou',
-        cancel_url: 'http://localhost:3000/thankyoul',
-    });
+    var user_id = req.session.userID.userID;
+    const shoppingCartRef = firestore.collection('shoppingCart').doc(user_id).collection(user_id);
 
-    res.redirect(303, session.url);
+    //Get the item from user's shopping cart
+    var total_price = 0;
+
+    shoppingCartRef.orderBy("created", "desc").get().then((querySnapshot)=>{
+        querySnapshot.forEach((doc)=>{
+            
+            //Add up all the price
+            total_price = total_price + parseFloat(doc.data().soldPrice); //Sold price
+            total_price = total_price + parseFloat(doc.data().shippingFees); //shipping fees
+
+        })
+
+        //Call make payment method
+        makePayment(total_price).then((url)=>{
+            res.redirect(url);
+        });
+
+    })
+
 }
 
 exports.shopping_cart_page = function(req, res){
@@ -98,4 +96,31 @@ exports.remove_cart_item = function (req, res){
     else{
         res.redirect("/");
     }
+}
+
+async function makePayment(payment_amount){
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: [
+            'card',
+            'fpx',
+            'grabpay',
+        ],
+        line_items: [
+            {
+            price_data: {
+                currency: 'myr',
+                product_data: {
+                name: 'Bidding Deal',
+                },
+                unit_amount: payment_amount * 100,
+            },
+            quantity: 1,
+            },
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:3000/thankyou',
+        cancel_url: 'http://localhost:3000/bidder-profile?payment-cancelled',
+    });
+
+    return session.url;
 }
