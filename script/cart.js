@@ -1,4 +1,4 @@
-function checkoutTimeLeft(endDate, display_id){
+function checkoutTimeLeft(endDate, display_id, remove_id){
 
     // Set the date we're counting down to
     var display_container = document.getElementById(display_id);
@@ -24,6 +24,21 @@ function checkoutTimeLeft(endDate, display_id){
             // If the count down is over, write some text 
             clearInterval(x);
             display_container.innerHTML =  "Checkout Time Ended";
+
+            //Remove product
+            $.ajax({
+                type: "POST",
+                url: "/cart-remove",
+                data: {
+                    cart_id: remove_id
+                },
+                success: function(result) {    
+
+                },
+                error: function(result) {
+                    alert(result)
+                }
+            });
         }
         else{
             display_container.innerHTML = days + " days  " + hours + " hours  " + minutes + " minutes " + seconds + " seconds"; 

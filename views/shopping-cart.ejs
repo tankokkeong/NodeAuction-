@@ -20,6 +20,9 @@
 
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <%- include("./common/header.ejs") %>
@@ -64,7 +67,7 @@
                                         <span class="text-primary" id="item-countdown-display-<%= item_count; %>"></span>
 
                                         <script>
-                                            checkoutTimeLeft('<%= item.endDate %>', 'item-countdown-display-<%= item_count; %>');
+                                            checkoutTimeLeft('<%= item.endDate %>', 'item-countdown-display-<%= item_count; %>', '<%= item.cartID %>');
                                         </script>
                                     </p>                        
                                 </div>
@@ -195,9 +198,15 @@
                             </table>
 
                             <div class="mt-3">
-                                <form action="/create-checkout-session" method="POST" id="payment-form">
-                                    <button class="btn btn-primary"  style="width: 100%;" id="checkout-btn" type="submit">Check Out</button>
-                                </form>
+                                
+                                    <% if(subtotal != 0){ %>
+                                    <form action="/create-checkout-session" method="POST" id="payment-form"></form>
+                                        <button class="btn btn-primary"  style="width: 100%;" id="checkout-btn" type="submit">Check Out</button>
+                                    </form>
+                                    <% }else{ %>
+                                        <button class="btn btn-primary"  style="width: 100%;" id="checkout-btn" disabled>Check Out</button>
+                                    <% }%>
+                                
         
                                 <div class="text-left mt-3">
                                     <span class="font-weight-bold">We Accept</span>
