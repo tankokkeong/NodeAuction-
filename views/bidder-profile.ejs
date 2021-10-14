@@ -268,15 +268,30 @@
                                         <th scope="col">Deal Price (USD)</th>
                                         <th scope="col">Auction Start Date</th>
                                         <th scope="col">Auction End Date</th>
-                                        <th scope="col">Payment Method</th>
                                         <th scope="col">Payment Status</th>
                                         <th scope="col">Payment Date</th>
-                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
             
                                 <tbody id="bidding-list">
-                                    
+                                    <% if (paymentRecords.length > 0) { %>
+                                        <% paymentRecords.forEach(record => { %>
+                                            <tr>
+                                                <th scope='row' class='text-center'><img src='upload/<%= record.itemImage %>' width='100%'></th>
+                                                <td><%= record.itemName %></td>
+                                                <td>$ <%= record.itemStartingPrice %></td>                                           
+                                                <td>$ <%= record.soldPrice %></td>
+                                                <td><%= record.startingDate %></td>
+                                                <td><%= record.endDate %></td>
+                                                <td><%= record.paymentStatus %></td>
+                                                <td><%= record.paymentDate %></td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="mt-3 mb-3 text-danger font-weight-bold">
+                                            You have not bid any items yet...
+                                        </div>
+                                    <% } %>
                                 </tbody>
                             </table>
 

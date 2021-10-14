@@ -35,13 +35,13 @@
                                 <h4 class="font-weight-bold">Cart Item(<%= cartItem.length %>)</h4>
                             </div>
 
-                            <% if (cartItem.length > 0) { %>
+                            <% 
+                                var item_count = 0; 
+                                var subtotal = 0;
+                                var shipping = 0;
+                            %>
 
-                                <% 
-                                    var item_count = 0; 
-                                    var subtotal = 0;
-                                    var shipping = 0;
-                                %>
+                            <% if (cartItem.length > 0) { %>
     
                                 <% cartItem.forEach(item => { %>
     
@@ -189,7 +189,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Total: </th>
-                                        <td class="text-right text-success font-weight-bold">$ <%=subtotal+shipping %></td>
+                                        <td class="text-right text-success font-weight-bold">$ <%= subtotal+shipping %></td>
                                     </tr>
                                 </tbody>
                             </table>

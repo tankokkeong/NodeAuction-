@@ -211,7 +211,7 @@
                                     <th scope="col">Starting Price (USD)</th>
                                     <th scope="col">Auction Status</th>
                                     <th scope="col">Sold Price (USD)</th>
-                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Payment Status</th>
                                     <th scope="col">Payment Date</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -226,11 +226,14 @@
                                             <td>$ <%= item.startingPrice %></td>                                           
                                             <td><%= item.auctionStatus %></td>
                                             <td>$ <%= item.soldPrice %></td>
-                                            <td><%= item.paymentMethod %></td>
+                                            <td><%= item.paymentStatus %></td>
                                             <td><%= item.paymentDate %></td>
                                             <td class='text-center'>
                                                 <a href='product-info?item=<%= item.itemID %>' class='btn btn-primary mt-1'><i class="fas fa-eye"></i> View</a>
+
+                                                <%if(item.auctionStatus != "Ended"){ %>
                                                 <button onclick="confirmDeleteItem('<%= item.itemID %>')" class='btn btn-danger mt-1'><i class="fas fa-trash"></i> Delete</button>
+                                                <%} %>
                                             </td>
                                         </tr>
                                     <% }) %>

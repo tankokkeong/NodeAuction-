@@ -11,7 +11,9 @@ exports.bidder_profile_page = function(req, res){
 
         if(account_type == "bidder"){
             const bidderHistory = firestore.collection('bidderHistory').doc(user_id).collection(user_id);
+            const paymentRecordsRef = firestore.collection('paymentRecord').doc(user_id).collection(user_id);
             var bid_history = [];
+            var payment_records = [];
 
             bidderHistory.orderBy("created", "desc").get().then((querySnapshot)=>{
                 querySnapshot.forEach((doc)=>{
@@ -20,7 +22,14 @@ exports.bidder_profile_page = function(req, res){
                     bid_history.push(doc.data());
                 });
 
-                res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record, bidHistory: bid_history});
+                paymentRecordsRef.orderBy("created", "desc").get().then((snapshot)=>{
+                    snapshot.forEach((doc)=>{
+                        payment_records.push(doc.data());
+                    });
+
+                    res.render('bidder-profile', {authenticated: true, accountType : account_type, userRecord: user_record, bidHistory: bid_history, paymentRecords: payment_records});
+                })
+                
             });
             
         }

@@ -125,7 +125,6 @@ exports.post_item = function(req, res){
                 itemName : item_name,
                 soldPrice: "-",
                 paymentStatus: "-",
-                paymentMethod: "-",
                 paymentDate: "-",
                 auctionStatus: "Ongoing",
                 startingPrice: item_starting_price,
@@ -303,6 +302,7 @@ exports.delete_item = function (req, res){
 function updateAuctionWinner(itemId){
     const itemRef = firestore.collection('items').doc(itemId);
     const bidingListRef = firestore.collection("bidList").doc(itemId).collection(itemId);
+    const auctionedItemRef = firestore.collection('auctionedItem');
     var itemObject = new Object();
 
     //Get the bidder with the highest bid
@@ -332,6 +332,7 @@ function updateAuctionWinner(itemId){
                         itemObject.postedBy = item_doc.data().postedBy;
                         itemObject.winner= bid_by;
                         itemObject.soldPrice = sold_price;
+                        itemObject.keywords = item_doc.data().keywords;
                         itemObject.created = firebase.firestore.Timestamp.fromDate(new Date());
     
                         //Set the winner of the auction
@@ -341,8 +342,34 @@ function updateAuctionWinner(itemId){
                             
                             //Add the item to the winner's shopping cart
                             const shoppingCartRef = firestore.collection('shoppingCart').doc(bid_by).collection(bid_by).doc(itemId);
+
+                            itemObject.itemID = itemId;
     
                             shoppingCartRef.set(itemObject)
+
+                            const auctionedItemRef = firestore.collection('auctionedItem');
+
+                            //Update the auctioned item ref
+                            auctionedItemRef.where("itemID", "==", itemId).get().then((auctionItemSnapshot)=>{
+                                auctionItemSnapshot.forEach((auctionItem)=>{
+                                    var auctionItemObject = new Object();
+
+                                    auctionItemObject.itemID = itemId;
+                                    auctionItemObject.itemImage = auctionItem.data().itemImage;
+                                    auctionItemObject.itemName = auctionItem.data().itemName;
+                                    auctionItemObject.soldPrice = sold_price;
+                                    auctionItemObject.paymentStatus = "Unpaid";
+                                    auctionItemObject.paymentDate = "-";
+                                    auctionItemObject.auctionStatus = "Ended";
+                                    auctionItemObject.startingPrice = auctionItem.data().startingPrice;
+                                    auctionItemObject.startingDate = auctionItem.data().startingDate;
+                                    auctionItemObject.endDate = auctionItem.data().endDate;
+                                    auctionItemObject.postedBy = auctionItem.data().postedBy;
+                                    auctionItemObject.created = auctionItem.data().created;
+
+                                    auctionedItemRef.doc(auctionItem.id).set(auctionItemObject);
+                                });
+                            });
                         });
                     }
                     else{
