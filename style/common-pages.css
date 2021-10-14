@@ -1,0 +1,46 @@
+.common-container{
+    padding: 50px;
+}
+
+.help-input{
+    position: relative;
+}
+
+.search-icon{
+    position: absolute;
+    left: 15px;
+    top: 10px;
+}
+
+.help-search-field{
+    padding-left: 35px;
+}
+
+.question-container{
+    padding: 20px;
+}
+
+.question-help{
+    padding: 15px;
+    border-radius: 20px;
+    margin-top: 15px;
+}
+
+.question-row{
+    width: 100%;
+    margin-right: 0;
+    cursor: pointer;
+}
+
+.question-answer{
+    border-top: 1px solid white;
+    padding-top: 15px;
+    display: none;
+}
+
+@media (min-width:850px){
+
+    .common-container{
+        padding: 50px 15%;
+    }
+}

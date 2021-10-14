@@ -115,6 +115,16 @@ app.post("/cart-remove", shoppingCartController.remove_cart_item);
 
 app.post("/create-checkout-session", shoppingCartController.create_checkout_session);
 
+app.get("/about-us", homeController.about_us_page);
+
+app.get("/contact-us", homeController.contact_us_page);
+
+app.get("/help", homeController.help_centre_page);
+
+app.get("/terms", homeController.terms_conditions_page);
+
+app.get("/privacy", homeController.privacy_policy_page);
+
 app.get("/logout", loginController.logout);
 
 app.get("/noscript", errorController.no_script_page);

@@ -100,3 +100,63 @@ exports.search_page = function(req, res){
         });
     }
 }
+
+exports.about_us_page = function(req, res){
+
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('about-us', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('about-us', {authenticated: false});
+    }
+}
+
+exports.contact_us_page = function(req, res){
+
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('contact-us', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('contact-us', {authenticated: false});
+    }
+}
+
+exports.privacy_policy_page = function(req, res){
+
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('privacy', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('privacy', {authenticated: false});
+    }
+}
+
+exports.terms_conditions_page = function(req, res){
+
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('terms', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('terms', {authenticated: false});
+    }
+}
+
+exports.help_centre_page = function(req, res){
+
+    if(req.session.userID){
+        var account_type = req.session.userID.accountType;
+
+        res.render('help', {authenticated: true, accountType: account_type});
+    }
+    else{
+        res.render('help', {authenticated: false});
+    }
+}

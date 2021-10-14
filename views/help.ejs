@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Centre</title>
+
+    <%- include("./common/plugins.ejs") %>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style/common-pages.css">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <%- include("./common/header.ejs") %>
+
+    <div class="body-content">
+        <div class="common-container text-center">
+            <div class="common-header mt-3">
+                <h1>How can we help you?</h1>
+            </div>
+
+            <div class="help-input">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="form-control help-search-field" placeholder="Describe your issue here..." id="search-input" oninput="helpSearch()">
+            </div>
+
+            <div class="common-content mt-3">
+                <div class="question-container">
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-1', 'question-1', this.id)" id="question-row-1">
+                            <div class="col-10 text-left question-text">
+                                How to add an item to my shopping cart?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-1"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-1">
+                            You cannot directly add items into your cart, you can only do that by participating in auctions. Once the auction is ended, 
+                            the item will be added to the highest bidder's shopping cart. 
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-2', 'question-2', this.id)" id="question-row-2">
+                            <div class="col-10 text-left question-text">
+                                What if I want to cancel the products in my shopping cart?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-2"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-2">
+                            You can cancel your products at your shopping cart but do aware that if you cancel the product in your shopping cart
+                            for 3 times, you will get the penalty of account suspension.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-3', 'question-3', this.id)" id="question-row-3">
+                            <div class="col-10 text-left question-text">
+                                Can Auctionners bid for an item?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-3"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-3">
+                            No, the auctioneers are not allowed to bid for their own auctioned item or bid for items that 
+                            are posted by other auctioneers.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-4', 'question-4', this.id)" id="question-row-4">
+                            <div class="col-10 text-left question-text">
+                                Can Bidders post any item for auction?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-4"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-4">
+                            No, only the auctioneers are allowed to post items for auction. The bidders can only bid for the items that are
+                            posted by the auctioneers.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-5', 'question-5', this.id)" id="question-row-5">
+                            <div class="col-10 text-left question-text">
+                                What are the payment methods available here?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-5"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-5">
+                            We accept Grab Pay, Credit Card, Debit Card and FPX.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-6', 'question-6', this.id)" id="question-row-6">
+                            <div class="col-10 text-left question-text">
+                                is there a time limit to check out the products in my shopping cart?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-6">
+                            Yes, you need to check out your product within 7 days after the auction is ended.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-7', 'question-7', this.id)" id="question-row-7">
+                            <div class="col-10 text-left question-text">
+                                What if I did not check out the product in my shopping cart within 7 days?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-7"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-7">
+                            The product will automatically be removed from the cart, and it will be considered as product cancellation. 3 times
+                            product cancellation can lead to account suspension.
+                        </div>
+                    </div>
+
+                    <div class="question-help bg-dark text-light">
+                        <div class="row question-row" onclick="openAnswer('btn-8', 'question-8', this.id)" id="question-row-8">
+                            <div class="col-10 text-left question-text">
+                                How many times can a bidder bid within an auction?
+                            </div>
+
+                            <div class="col-2 text-right">
+                                <i class="fas fa-angle-up" id="btn-8"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-answer mt-3 text-left" id="question-8">
+                            You can bid as many times as you want, there is no limit for the bidders. The bidder comes with
+                            the highest bid will win the auction.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <%- include("./common/footer.ejs") %>
+</body>
+</html>
+
+<script>
+
+function openAnswer(btn_id, answer_id, row_id){
+    var row = document.getElementById(row_id);
+    var button = document.getElementById(btn_id);
+
+    //change button direction
+    button.style.transform = "rotate(180deg)";
+    $("#" + answer_id).slideToggle("slow");
+
+    // Change row oncall function
+    row.setAttribute('onclick' , "collapseAnswer('" + btn_id + "','" + answer_id + "','" + row_id + "')");
+}
+
+function collapseAnswer(btn_id, answer_id, row_id){
+    var row = document.getElementById(row_id);
+    var button = document.getElementById(btn_id);
+
+    //change button direction
+    button.style.transform = "rotate(360deg)";
+    $("#" + answer_id).slideToggle("slow");
+
+    // Change row oncall function
+    row.setAttribute('onclick' , "openAnswer('" + btn_id + "','" + answer_id + "','" + row_id + "')");
+}
+
+function helpSearch(){
+    var input = document.getElementById("search-input").value;
+    var question_container = document.getElementsByClassName("question-help");
+    var questions_text = document.getElementsByClassName("question-text");
+
+    for(var i = 0; i < question_container.length ; i++){
+
+        if (questions_text[i].innerText.trim().toUpperCase().indexOf(input.toUpperCase()) > -1 ) {
+            question_container[i].style.display = "block";
+        } else {
+            question_container[i].style.display = "none";
+        }
+
+    }
+}
+</script>
