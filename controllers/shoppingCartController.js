@@ -74,18 +74,52 @@ exports.remove_cart_item = function (req, res){
             const shoppingCartRef = firestore.collection('shoppingCart').doc(user_id).collection(user_id).doc(cart_id);
             const removedCartRecordsRef = firestore.collection("removedCartRecords");
 
-            //Remove item from the cart
-            shoppingCartRef.delete().then(()=>{
+            //Update auctioned item ref
+            shoppingCartRef.get().then((doc)=>{
 
-                //Add the remove record
-                removedCartRecordsRef.add({
-                    removedBy: user_id,
-                    cartID: cart_id,
-                    created: firebase.firestore.Timestamp.fromDate(new Date())
-                }).then(()=>{
-                    res.redirect("/shopping-cart");
-                })
-            });
+                //If exist
+                if(doc.exists){
+
+                    //Update the auctioned item ref
+                    const auctionedItemRef = firestore.collection('auctionedItem');
+
+                    auctionedItemRef.where("itemID", "==", doc.data().itemID).get().then((itemQuery)=>{
+                        itemQuery.forEach((itemDoc)=>{
+                            var itemObject = new Object();
+
+                            itemObject.itemID = itemDoc.data().itemID,
+                            itemObject.itemImage = itemDoc.data().itemImage,
+                            itemObject.itemName = itemDoc.data().itemName,
+                            itemObject.soldPrice = doc.data().soldPrice,
+                            itemObject.paymentStatus = "Canceled by the buyer",
+                            itemObject.paymentDate = "Not available",
+                            itemObject.auctionStatus = "Ended",
+                            itemObject.startingPrice = itemDoc.data().startingPrice,
+                            itemObject.startingDate  = itemDoc.data().startingDate,
+                            itemObject.endDate = itemDoc.data().endDate,
+                            itemObject.postedBy = itemDoc.data().postedBy,
+                            itemObject.created = itemDoc.data().created
+
+                            //Update the auctioned item ref
+                            auctionedItemRef.doc(itemDoc.id).set(itemObject);
+                        });
+
+                        //Delete item from the cart
+                        shoppingCartRef.delete().then(()=>{
+
+                            //Add the remove record
+                            removedCartRecordsRef.add({
+                                removedBy: user_id,
+                                cartID: cart_id,
+                                created: firebase.firestore.Timestamp.fromDate(new Date())
+                            }).then(()=>{
+                                res.redirect("/shopping-cart");
+                            })
+                        });
+                    });
+                }
+            })
+            
             
         }
         else{

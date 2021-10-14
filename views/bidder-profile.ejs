@@ -65,18 +65,6 @@
                 
                                     <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
                                         <div class="form-group row">
-                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-10">
-                                            <input type="button" class="btn btn-dark" id="password" value="Change Password" onclick="passwordChanged()">
-                                            <div class="text-success mt-3" id="password-change-alert" style="display: none;">
-                                                Password changed successful!
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                
-                                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                        <div class="form-group row">
                                             <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
                                             <div class="col-sm-10">
                                             <input type="text" class="form-control" id="full-name" value="<%= userRecord.fullName %>" name="full_name">
@@ -146,46 +134,7 @@
                                 </div>
                             </form>
 
-                            <div class="profile-payment-method">
-                                <div class="payment-method-title">
-                                    <h2>Payment Method</h2>
-                                </div>
-
-                                <div class="payment-method-container mt-3">
-                                    <button class="btn btn-dark" onclick="addPayment()">Add Payment</button>
-
-                                    <ul class="list-unstyled mt-3">
-                                        <div class="text-info" id="no-payment">
-                                            No payment method found
-                                        </div>
-
-                                        <li class="payment-row" id="payment-row" style="display:none;">
-                                            <div class="payment-col">
-                                                <img src="images/visa.png" class="mr-3" width="50px">
-                                            </div>
-
-                                            <div class="payment-col payment-card-num">
-                                                1234 56XX XXXX 7890
-                                            </div>
-
-                                            <div class="payment-col payment-delete-btn">
-                                                <button class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Delete" onclick="deletePayment()">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </li>
-
-                                        <div class="text-success mt-3" id="payment-added" style="display: none;">
-                                            Payment added successful!
-                                        </div>
-
-                                        <div class="text-danger mt-3" id="payment-deleted" style="display: none;">
-                                            Payment deleted successful!
-                                        </div>
-
-                                    </ul>
-                                </div>
-                            </div>
+                            
                         </div>
 
                     

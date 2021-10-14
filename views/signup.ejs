@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
 
+    <%- include("./common/plugins.ejs") %>
+
     <script src="script/signup.js"></script>
 
     <link rel="stylesheet" href="style/signup.css">
 
-    <%- include("./common/plugins.ejs") %>
+    <!-- Ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <%- include("./common/header.ejs") %>
@@ -27,6 +30,7 @@
         </div>
 
           <div class="signup-input">
+              <div></div>
                 <div class="form-group row">
                     <label for="staticEmail" class="col-sm-2 col-form-label text-right">Username: </label>
                     <div class="col-sm-10 ">
@@ -202,13 +206,13 @@
         </div>
 
         <div class="form-group mt-3 text-center">
-            <a href="login.html" class="signup-link">Already a member? Login now</a>
+            <a href="login.html" class="signup-link">Already a member? Login now!</a>
         </div>
         
       </div>
     </div>
 
-    <%- include("./common/plugins.ejs") %>
+    <%- include("./common/footer.ejs") %>
 </body>
 </html>
 

@@ -302,7 +302,6 @@ exports.delete_item = function (req, res){
 function updateAuctionWinner(itemId){
     const itemRef = firestore.collection('items').doc(itemId);
     const bidingListRef = firestore.collection("bidList").doc(itemId).collection(itemId);
-    const auctionedItemRef = firestore.collection('auctionedItem');
     var itemObject = new Object();
 
     //Get the bidder with the highest bid

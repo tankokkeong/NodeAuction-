@@ -1,6 +1,3 @@
-//Declare firestore database
-var db = firebase.firestore();
-
 //Global variables
 let current_user_id = "";
 let current_username = "";
@@ -188,26 +185,29 @@ function SignUpAccount(){
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user)
                 {
-                   // Add a new document in collection "users"
-                    db.collection("users").doc(user.uid).set({
-                        Username: username,
-                        Email: email,
-                        FullName: fullName,
-                        AddressLine1: addressLine1,
-                        AddressLine2: addressLine2,
-                        City: city,
-                        Country: country,
-                        PhoneNumber : phoneNumber,
-                        AccountType: accountType
-                    })
-                    .then(() => {
-                        console.log("Document successfully written!");
-
-                        // Signed in 
-                        window.location.href = "login?loginNow";
-                    })
-                    .catch((error) => {
-                        console.error("Error writing document: ", error);
+                   //Add user
+                    $.ajax({
+                        type: "POST",
+                        url: "/signup",
+                        data: {
+                            userID: user.uid,
+                            username: username,
+                            email: email,
+                            fullName: fullName,
+                            addressLine1: addressLine1,
+                            addressLine2: addressLine2,
+                            city: city,
+                            country: country,
+                            phoneNumber: phoneNumber,
+                            accountType: accountType,
+                        },
+                        success: function(result) {    
+                            // Signed in 
+                            window.location.href = "login?loginNow";
+                        },
+                        error: function(result) {
+                            alert(result)
+                        }
                     });
                 }
             });
@@ -318,6 +318,54 @@ function login()
     
 }
 
+function passwordReset()
+{
+    var auth = firebase.auth();
+    email = document.getElementById("email").value;
+    error_prompt = document.getElementById("error-prompt");
+    reset_loader = document.getElementById("reset-loader");
+
+    // Display the loader
+    reset_loader.style.display = "";
+
+    // Clear the error prompt
+    error_prompt.innerHTML = "";
+
+    // Email validation
+    if(email === "")
+    {
+        error_prompt.innerHTML = "Email is required!";
+
+        // Remove the loader
+        reset_loader.style.display = "none";
+    }
+    else
+    {
+        auth.sendPasswordResetEmail(email).then(function() {
+
+            // Email sent.
+            window.location.href = "forgot-password?email-sent";
+
+            // Remove the loader
+            reset_loader.style.display = "none";
+    
+        }).catch(function(error) {
+            // An error happened.
+            // var errorCode = error.code;
+            // var errorMessage = error.message;
+    
+            // Display error
+            error_prompt.innerHTML = "Invalid email!";
+
+            // Remove the loader
+            reset_loader.style.display = "none";
+    
+        });
+    }
+
+}
+
+
 function checkSignIn()
 {
     // Check Login
@@ -396,83 +444,6 @@ function enterSignIn()
     }
 }
 
-function sampleBidderPastRecord(){
-    table = document.getElementById("bidding-list");
-
-    for(var i = 0; i < 100; i++){
-
-        if(i % 2 ==0){
-            table.innerHTML += 
-            "<tr>" +
-                "<th scope='row' class='text-center'><img src='images/apple-macbook-air-13-m1-8gb-256gb-ssd-laptop-min.jpg' width='100%'></th>"+
-                "<td>Apple Macbook Air 13 M1 8GB 256GB SSD Laptop</td>"+
-                "<td>$1055</td>"+
-                "<td><span class='badge badge-warning bid-badge'>Unpaid</span></td>"+
-                "<td>Visa</td>"+
-                "<td>20 July 2021, 09:52:21 AM</td>"+
-                "<td class='text-center'><a href='checkout' class='btn btn-success'><i class='fas fa-money-bill'></i> Pay Now</a></td>"+
-            "</tr>";
-        }
-        else{
-            table.innerHTML += 
-            "<tr>" +
-                "<th scope='row' class='text-center'><img src='images/Apple mac mini late2018-min.jpg' width='100%'></th>"+
-                "<td>Apple mac mini</td>"+
-                "<td>$850</td>"+
-                "<td><span class='badge badge-success bid-badge'>Paid</span></td>"+
-                "<td>Visa</td>"+
-                "<td>20 July 2021, 09:52:21 AM</td>"+
-                "<td class='text-center'><a href='product-info' class='btn btn-primary'><i class='fas fa-eye'></i> View</a></td>"+
-            "</tr>";
-        }
-        
-    }
-
-    $(document).ready( function () {
-        //Create new Datatable
-        $('#bidding-history-table').DataTable();
-
-    } );
-}
-
-function sampleAuctioneerPastRecord(){
-    table = document.getElementById("bidding-list");
-
-    for(var i = 0; i < 100; i++){
-
-        if(i % 2 ==0){
-            table.innerHTML += 
-            "<tr>" +
-                "<th scope='row' class='text-center'><img src='images/apple-macbook-air-13-m1-8gb-256gb-ssd-laptop-min.jpg' width='100%'></th>"+
-                "<td>Apple Macbook Air 13 M1 8GB 256GB SSD Laptop</td>"+
-                "<td>$1055</td>"+
-                "<td><span class='badge badge-warning bid-badge'>Unpaid</span></td>"+
-                "<td>Visa</td>"+
-                "<td>20 July 2021, 09:52:21 AM</td>"+
-                "<td class='text-center'><a href='' class='btn btn-danger'><i class='fas fa-envelope'></i> Report</a></td>"+
-            "</tr>";
-        }
-        else{
-            table.innerHTML += 
-            "<tr>" +
-                "<th scope='row' class='text-center'><img src='images/Apple mac mini late2018-min.jpg' width='100%'></th>"+
-                "<td>Apple mac mini</td>"+
-                "<td>$850</td>"+
-                "<td><span class='badge badge-success bid-badge'>Paid</span></td>"+
-                "<td>Visa</td>"+
-                "<td>20 July 2021, 09:52:21 AM</td>"+
-                "<td class='text-center'><a href='product-info' class='btn btn-primary'><i class='fas fa-eye'></i> View</a></td>"+
-            "</tr>";
-        }
-        
-    }
-
-    $(document).ready( function () {
-        //Create new Datatable
-        $('#bidding-history-table').DataTable();
-
-    } );
-}
 
 function profileChanges(){
     var changed_url = window.location.href.split("?");
@@ -521,18 +492,6 @@ function deletePayment(){
     setTimeout(function(){
         payment_deleted.style.display = "none";
         
-    }, 3000);
-}
-
-function passwordChanged(){
-    var password_change_alert = document.getElementById("password-change-alert");
-
-    //Display password changed alert
-    password_change_alert.style.display = "";
-
-    //Remove payment deleted alert after 3 seconds
-    setTimeout(function(){
-        password_change_alert.style.display = "none";
     }, 3000);
 }
 

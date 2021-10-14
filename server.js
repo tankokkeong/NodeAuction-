@@ -83,9 +83,13 @@ app.get("/home", homeController.home_page);
 
 app.get("/login", loginController.login_page);
 
+app.get("/forgot-password", loginController.forgot_password_page);
+
 app.post("/login", loginController.process_login);
 
 app.get("/signup", signupController.signup_page);
+
+app.post("/signup", signupController.process_signup);
 
 app.get("/bidder-profile", bidderController.bidder_profile_page);
 
