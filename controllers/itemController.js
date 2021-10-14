@@ -190,6 +190,7 @@ exports.submit_bid = function(req, res){
 
                         const itemRef = firestore.collection('items').doc(id);
                         const bidderHistory = firestore.collection('bidderHistory').doc(bid_by).collection(bid_by);
+                        const cartCheck = firestore.collection("cartChecked").doc(bid_by).collection("isBidding").doc(id)
 
                         itemRef.get().then((doc)=>{
 
@@ -206,7 +207,14 @@ exports.submit_bid = function(req, res){
                                     bidTime : bid_time,
                                     created: firebase.firestore.Timestamp.fromDate(new Date())
                                 }).then(()=>{
-                                    res.redirect('/product-info?item=' + id);
+
+                                    cartCheck.set({
+                                        itemID: id,
+                                        bidPrice: bidPrice,
+                                        created: firebase.firestore.Timestamp.fromDate(new Date())
+                                    }).then(()=>{
+                                        res.redirect('/product-info?item=' + id);
+                                    });
                                 });
                             }
                             else{

@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 const firebase = require('firebase-admin');
+var helper = require('../helper');
 const stripe = require('stripe')('sk_test_51JjisWHuoCBZWlMWAiqpXcCadF2lToBkxX270VzWEAeFRFNadQljdOiWYIYKH998yuGwO3ZRRQxwdOq3z0hmgTJf007tYHK1t6');
 
 exports.create_checkout_session = async function(req, res){
@@ -31,35 +32,38 @@ exports.create_checkout_session = async function(req, res){
 
 exports.shopping_cart_page = function(req, res){
     
-    if(req.session.userID){
-        var account_type = req.session.userID.accountType;
+    //Update shopping cart
+    updateShoppingCart(req).then(()=>{
+        if(req.session.userID){
+            var account_type = req.session.userID.accountType;
 
-        if(account_type == "bidder"){
+            if(account_type == "bidder"){
 
-            var user_id = req.session.userID.userID;
-            const shoppingCartRef = firestore.collection('shoppingCart').doc(user_id).collection(user_id);
+                var user_id = req.session.userID.userID;
+                const shoppingCartRef = firestore.collection('shoppingCart').doc(user_id).collection(user_id);
 
-            var cart_item = [];
+                var cart_item = [];
 
-            shoppingCartRef.orderBy("created", "desc").get().then((querySnapshot)=>{
-                querySnapshot.forEach((doc)=>{
-                    var cart_object = new Object(doc.data());
-                    cart_object.cartID = doc.id;
-                    cart_item.push(cart_object)
+                shoppingCartRef.orderBy("created", "desc").get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=>{
+                        var cart_object = new Object(doc.data());
+                        cart_object.cartID = doc.id;
+                        cart_item.push(cart_object)
+                    })
+
+                    res.render('shopping-cart', {authenticated: true, accountType : account_type, cartItem: cart_item});
                 })
-
-                res.render('shopping-cart', {authenticated: true, accountType : account_type, cartItem: cart_item});
-            })
+                
+            }
+            else{
+                res.redirect("/");
+            }
             
         }
         else{
             res.redirect("/");
         }
-        
-    }
-    else{
-        res.redirect("/");
-    }
+    });
 }
 
 exports.remove_cart_item = function (req, res){
@@ -130,6 +134,121 @@ exports.remove_cart_item = function (req, res){
     else{
         res.redirect("/");
     }
+}
+
+async function updateShoppingCart(req){
+    var user_id = req.session.userID.userID;
+    const cartCheck = firestore.collection("cartChecked").doc(user_id).collection("isBidding");
+
+    //Check cart item
+    cartCheck.get().then((cartQuery)=>{
+        cartQuery.forEach((cart)=>{
+
+            const itemRef = firestore.collection('items').doc(cart.id);
+            
+            itemRef.get().then((item)=>{
+                // Check if auction ended
+                if(helper.isAuctionEnded(item.data().endDate)){
+
+                    //Check if update winners before
+                    if(item.data().winner.length === 0){
+                        updateAuctionWinner(item.id).then(()=>{
+
+                            //Delete the cart check
+                            cartCheck.doc(cart.id).delete();
+                        });
+                    }
+                }
+            })
+        });
+
+        return true;
+    });
+}
+
+async function updateAuctionWinner(itemId){
+    const itemRef = firestore.collection('items').doc(itemId);
+    const bidingListRef = firestore.collection("bidList").doc(itemId).collection(itemId);
+    var itemObject = new Object();
+
+    //Get the bidder with the highest bid
+    bidingListRef.orderBy("BidPrice", "desc").limit(1).get().then((querySnapshot)=>{
+
+        querySnapshot.forEach((doc) => {
+
+            if (doc.exists) {
+                //Get the users ID
+                var bid_by = doc.data().BidBy;
+                var sold_price = doc.data().BidPrice
+    
+                itemRef.get().then((item_doc) => {
+    
+                    if(item_doc.exists){
+    
+                        itemObject.itemImage = item_doc.data().itemImage;
+                        itemObject.itemName = item_doc.data().itemName;
+                        itemObject.itemDescription = item_doc.data().itemDescription;
+                        itemObject.itemRetailPrice = item_doc.data().itemRetailPrice;
+                        itemObject.itemStartingPrice = item_doc.data().itemStartingPrice;
+                        itemObject.minimumPerBid = item_doc.data().minimumPerBid,
+                        itemObject.shippingFees = item_doc.data().shippingFees;
+                        itemObject.itemCondition = item_doc.data().itemCondition;
+                        itemObject.startingDate = item_doc.data().startingDate;
+                        itemObject.endDate = item_doc.data().endDate;
+                        itemObject.postedBy = item_doc.data().postedBy;
+                        itemObject.winner= bid_by;
+                        itemObject.soldPrice = sold_price;
+                        itemObject.keywords = item_doc.data().keywords;
+                        itemObject.created = firebase.firestore.Timestamp.fromDate(new Date());
+    
+                        //Set the winner of the auction
+                        itemRef.set(
+                            itemObject
+                        ).then(()=>{
+                            
+                            //Add the item to the winner's shopping cart
+                            const shoppingCartRef = firestore.collection('shoppingCart').doc(bid_by).collection(bid_by).doc(itemId);
+
+                            itemObject.itemID = itemId;
+    
+                            shoppingCartRef.set(itemObject)
+
+                            const auctionedItemRef = firestore.collection('auctionedItem');
+
+                            //Update the auctioned item ref
+                            auctionedItemRef.where("itemID", "==", itemId).get().then((auctionItemSnapshot)=>{
+                                auctionItemSnapshot.forEach((auctionItem)=>{
+                                    var auctionItemObject = new Object();
+
+                                    auctionItemObject.itemID = itemId;
+                                    auctionItemObject.itemImage = auctionItem.data().itemImage;
+                                    auctionItemObject.itemName = auctionItem.data().itemName;
+                                    auctionItemObject.soldPrice = sold_price;
+                                    auctionItemObject.paymentStatus = "Unpaid";
+                                    auctionItemObject.paymentDate = "-";
+                                    auctionItemObject.auctionStatus = "Ended";
+                                    auctionItemObject.startingPrice = auctionItem.data().startingPrice;
+                                    auctionItemObject.startingDate = auctionItem.data().startingDate;
+                                    auctionItemObject.endDate = auctionItem.data().endDate;
+                                    auctionItemObject.postedBy = auctionItem.data().postedBy;
+                                    auctionItemObject.created = auctionItem.data().created;
+
+                                    auctionedItemRef.doc(auctionItem.id).set(auctionItemObject);
+                                });
+                            });
+                        });
+                    }
+                    else{
+                        // item_doc.data() will be undefined in this case
+                        console.log("No such document in item!");
+                    }
+                });
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document in biding list!" + itemId);
+            }
+        });
+    });
 }
 
 async function makePayment(payment_amount){

@@ -5,6 +5,7 @@ exports.home_page = function(req, res){
 
     const itemRef = firestore.collection('items');
     var item_array = [];
+    var ending_soon = [];
 
     itemRef.get().then((querySnapshot) => {
         querySnapshot.forEach((item) => {
@@ -23,15 +24,19 @@ exports.home_page = function(req, res){
             };
 
             item_array.push(itemObject);
+
+            if(ending_soon.length != 4){
+                ending_soon.push(itemObject);
+            }
         });
 
 
         if(req.session.userID){
             var account_type = req.session.userID.accountType;
-            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array});
+            res.render('home', {authenticated : true, accountType: account_type, itemArray: item_array, endingSoon: ending_soon});
         }
         else{
-            res.render('home', {authenticated : false, itemArray: item_array});
+            res.render('home', {authenticated : false, itemArray: item_array, endingSoon: ending_soon});
         }
     
         res.end();

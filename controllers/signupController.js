@@ -23,17 +23,30 @@ exports.process_signup = function(req, res){
     var phoneNumber = stripJs(req.body.phoneNumber);
     var accountType = stripJs(req.body.accountType);
 
-    firestore.collection("users").doc(userID).set({
-        Username: username,
-        Email: email,
-        FullName: fullName,
-        AddressLine1: addressLine1,
-        AddressLine2: addressLine2,
-        City: city,
-        Country: country,
-        PhoneNumber : phoneNumber,
-        AccountType: accountType
-    }).then(()=>{
-        res.redirect("login?loginNow");
+    admin
+    .auth()
+    .getUser(userID)
+    .then((userRecord) => {
+
+        // If user exists
+        firestore.collection("users").doc(userID).set({
+            Username: username,
+            Email: email,
+            FullName: fullName,
+            AddressLine1: addressLine1,
+            AddressLine2: addressLine2,
+            City: city,
+            Country: country,
+            PhoneNumber : phoneNumber,
+            AccountType: accountType
+        }).then(()=>{
+            res.redirect("login?loginNow");
+        })
     })
+    .catch((error) => {
+        console.log('Error fetching user data:', error);
+        res.end();
+    });
+
+   
 }
