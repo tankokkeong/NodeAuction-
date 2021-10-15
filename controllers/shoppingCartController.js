@@ -271,8 +271,8 @@ async function makePayment(payment_amount){
             },
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000/thankyou',
-        cancel_url: 'http://localhost:3000/bidder-profile?payment-cancelled',
+        success_url: 'https://firebase-auction.azurewebsites.net/thankyou',
+        cancel_url: 'https://firebase-auction.azurewebsites.net/bidder-profile?payment-cancelled',
     });
 
     return session.url;
